@@ -4,8 +4,8 @@
   "description": "hello world example of ifc.js",
   "main": "index.js",
   "scripts": {
-    "build": "rollup -c ./rollup.config.js",
-    "watch": "rollup -w -c ./rollup.config.js"
+    "build": "tsc && rollup -c ./rollup.config.js",
+    "watch": "tsc &&rollup -w -c ./rollup.config.js"
   },
   "repository": {
     "type": "git",
@@ -23,11 +23,21 @@
   },
   "homepage": "https://github.com/AnweshGangula/ifcjs-101#readme",
   "dependencies": {
-    "three": "^0.140.0",
-    "web-ifc-three": "^0.0.115"
+    "@thatopen/components": "~2.1.27",
+    "@thatopen/fragments": "~2.1.0",
+    "@thatopen/ui": "~2.1.0",
+    "@types/three": "0.160.0",
+    "camera-controls": "2.7.3",
+    "stats.js": "^0.17.0",
+    "three": "^0.160.1",
+    "three-mesh-bvh": "0.7.0",
+    "undici-types": "^6.19.6",
+    "web-ifc": "0.0.57"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.3.0",
-    "rollup": "^2.71.1"
+    "rollup": "^2.71.1",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.5.4"
   }
 }
