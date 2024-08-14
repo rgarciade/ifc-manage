@@ -1,58 +1,7 @@
-/* MD
-### 🏢 Loading IFC files
----
-
-IFC is the most common format to share BIM data openly. Our libraries are able to load, navigate and even create and edit them directly. In this tutorial, you'll learn how to open an IFC model in the 3D scene.
-
-:::tip IFC?
-
-If you are not famliar with the construction industry, this might be the first time you come across this term. It stands for Industry Foundation Classes, and it's the most widespread standard for sharing BIM data freely, without depending on specific software manufacturers and their propietary formats.
-
-:::
-
-In this tutorial, we will import:
-
-- `web-ifc` to get some IFC items.
-- `@thatopen/ui` to add some simple and cool UI menus.
-- `@thatopen/components` to set up the barebone of our app.
-- `Stats.js` (optional) to measure the performance of our app.
-*/
-
 import * as WEBIFC from "web-ifc";
 import * as BUI from "@thatopen/ui";
 import * as OBC from "@thatopen/components";
-
-/* MD
-  ### 🌎 Setting up a simple scene
-  ---
-
-  We will start by creating a simple scene with a camera and a renderer. If you don't know how to set up a scene, you can check the Worlds tutorial.
-*/
-
-const container = document.getElementById("container")!;
-
-const components = new OBC.Components();
-
-const worlds = components.get(OBC.Worlds);
-
-const world = worlds.create<
-  OBC.SimpleScene,
-  OBC.SimpleCamera,
-  OBC.SimpleRenderer
->();
-
-world.scene = new OBC.SimpleScene(components);
-world.renderer = new OBC.SimpleRenderer(components, container);
-world.camera = new OBC.SimpleCamera(components);
-
-components.init();
-
-world.camera.controls.setLookAt(12, 6, 8, 0, 0, -10);
-
-world.scene.setup();
-
-const grids = components.get(OBC.Grids);
-grids.create(world);
+import { GenerateWorld } from "./generateWorld";
 
 /* MD
 
@@ -60,7 +9,9 @@ grids.create(world);
 
 */
 
-world.scene.three.background = null;
+//world.scene.three.background = null;
+
+const standardWorld = new GenerateWorld();
 
 /* MD
   ### 🚗🏎️ Getting IFC and fragments
@@ -68,17 +19,17 @@ world.scene.three.background = null;
   When we read an IFC file, we convert it to a geometry called Fragments. Fragments are a lightweight representation of geometry built on top of THREE.js `InstancedMesh` to make it easy to work with BIM data efficiently. All the BIM geometry you see in our libraries are Fragments, and they are great: they are lightweight, they are fast and we have tons of tools to work with them. But fragments are not used outside our libraries. So how can we convert an IFC file to fragments? Let's check out how:
   */
 
-const fragments = components.get(OBC.FragmentsManager);
-const fragmentIfcLoader = components.get(OBC.IfcLoader);
+const fragments = standardWorld.components.get(OBC.FragmentsManager);
+const fragmentIfcLoader = standardWorld.components.get(OBC.IfcLoader);
 
 /* MD
   :::info Why not just IFC?
 
-  IFC is nice because it lets us exchange data with many tools in the AECO industry. But your graphics card doesn't understand IFC. It only understands one thing: triangles. So we must convert IFC to triangles. There are many ways to do it, some more efficient than others. And that's exactly what Fragments are: a very efficient way to display the triangles coming from IFC files. 
+  IFC is nice because it lets us exchange data with many tools in the AECO industry. But your graphics card doesn't understand IFC. It only understands one thing: triangles. So we must convert IFC to triangles. There are many ways to do it, some more efficient than others. And that's exactly what Fragments are: a very efficient way to display the triangles coming from IFC files.
 
   :::
 
-  Once Fragments have been generated, you can export them and then load them back directly, without needing the original IFC file. Why would you do that? Well, because fragments can load +10 times faster than IFC. And the reason is very simple.   When reading an IFC, we must parse the file, read the implicit geometry, convert it to triangles (Fragments) and send it to the GPU. When reading fragments, we just take the triangles and send them, so it's super fast. 
+  Once Fragments have been generated, you can export them and then load them back directly, without needing the original IFC file. Why would you do that? Well, because fragments can load +10 times faster than IFC. And the reason is very simple.   When reading an IFC, we must parse the file, read the implicit geometry, convert it to triangles (Fragments) and send it to the GPU. When reading fragments, we just take the triangles and send them, so it's super fast.
 
   :::danger How to use Fragments?
 
@@ -145,7 +96,7 @@ async function loadIfc() {
   const model = await fragmentIfcLoader.load(buffer);
   model.name = "example";
   model.position.set(0, 8.8, 0);
-  world.scene.three.add(model);
+  standardWorld.world.scene.three.add(model);
 }
 
 /* MD
