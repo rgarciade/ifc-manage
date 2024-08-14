@@ -1,117 +1,15 @@
-import * as WEBIFC from "web-ifc";
 import * as BUI from "@thatopen/ui";
-import * as OBC from "@thatopen/components";
 import { GenerateWorld } from "./generateWorld";
+import {InitIfLoader} from "./ifLoader";
 
-/* MD
-
-  We'll make the background of the scene transparent so that it looks good in our docs page, but you don't have to do that in your app!
-
-*/
-
-//world.scene.three.background = null;
 
 const standardWorld = new GenerateWorld();
-
-/* MD
-  ### 🚗🏎️ Getting IFC and fragments
-  ---
-  When we read an IFC file, we convert it to a geometry called Fragments. Fragments are a lightweight representation of geometry built on top of THREE.js `InstancedMesh` to make it easy to work with BIM data efficiently. All the BIM geometry you see in our libraries are Fragments, and they are great: they are lightweight, they are fast and we have tons of tools to work with them. But fragments are not used outside our libraries. So how can we convert an IFC file to fragments? Let's check out how:
-  */
-
-const fragments = standardWorld.components.get(OBC.FragmentsManager);
-const fragmentIfcLoader = standardWorld.components.get(OBC.IfcLoader);
-
-/* MD
-  :::info Why not just IFC?
-
-  IFC is nice because it lets us exchange data with many tools in the AECO industry. But your graphics card doesn't understand IFC. It only understands one thing: triangles. So we must convert IFC to triangles. There are many ways to do it, some more efficient than others. And that's exactly what Fragments are: a very efficient way to display the triangles coming from IFC files.
-
-  :::
-
-  Once Fragments have been generated, you can export them and then load them back directly, without needing the original IFC file. Why would you do that? Well, because fragments can load +10 times faster than IFC. And the reason is very simple.   When reading an IFC, we must parse the file, read the implicit geometry, convert it to triangles (Fragments) and send it to the GPU. When reading fragments, we just take the triangles and send them, so it's super fast.
-
-  :::danger How to use Fragments?
-
-  If you want to find out more about Fragments, check out the Fragments Manager tutorial.
-
-  :::
+const ifLoader = new InitIfLoader(standardWorld);
 
 
-  ### 🔭🔧 Calibrating the converter
-  ---
-  Now, we need to configure the path of the WASM files. What's WASM? It's a technology that lets us run C++ on the browser, which means that we can load IFCs super fast! These files are the compilation of our `web-ifc` library. You can find them in the github repo and in NPM. These files need to be available to our app, so you have 2 options:
-
-  - Download them and serve them statically.
-  - Get them from a remote server.
-
-  The easiest way is getting them from unpkg, and the cool thing is that you don't need to do it manually! It can be done directly by the tool just by writing the following:
-  */
-
-fragmentIfcLoader.setup();
-
-// If you want to the path to unpkg manually, then you can skip the line
-// above and set them manually as below:
-// fragmentIfcLoader.settings.wasm = {
-//   path: "https://unpkg.com/web-ifc@0.0.56/",
-//   absolute: true,
-// };
-
-/* MD
-  Awesome! Optionally, we can exclude categories that we don't want to convert to fragments like very easily:
-*/
-
-const excludedCats = [
-  WEBIFC.IFCTENDONANCHOR,
-  WEBIFC.IFCREINFORCINGBAR,
-  WEBIFC.IFCREINFORCINGELEMENT,
-];
-
-for (const cat of excludedCats) {
-  fragmentIfcLoader.settings.excludedCategories.add(cat);
+const  loadIfc = async () =>{
+  await ifLoader.loadIfc("http://127.0.0.1:5500/models/03.ifc");
 }
-
-/* MD
-  We can further configure the conversion using the `webIfc` object. In this example, we will make the IFC model go to the origin of the scene (don't worry, this supports model federation):
-  */
-
-fragmentIfcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = true;
-
-/* MD
-  ### 🚗🔥 Loading the IFC
-  ---
-  Next, let's define a function to load the IFC programmatically. We have hardcoded the path to one of our IFC files, but feel free to do this with any of your own files!
-
- :::info Opening local IFCs
-
-  Keep in mind that the browser can't access the file of your computer directly, so you will need to use the Open File API to open local files.
-
-  :::
-*/
-
-async function loadIfc() {
-  const file = await fetch("http://127.0.0.1:5500/models/03.ifc");
-  const data = await file.arrayBuffer();
-  const buffer = new Uint8Array(data);
-  const model = await fragmentIfcLoader.load(buffer);
-  model.name = "example";
-  model.position.set(0, 8.8, 0);
-  standardWorld.world.scene.three.add(model);
-}
-
-/* MD
-  If you want to get the resulted model every time a new model is loaded, you can subscribe to the following event anywhere in your app:
-*/
-
-fragments.onFragmentsLoaded.add((model) => {
-  console.log(model);
-});
-
-/* MD
-  ### 🎁 Exporting the result to fragments
-  ---
-  Once you have your precious fragments, you might want to save them so that you don't need to open this IFC file each time your user gets into your app. Instead, the next time you can load the fragments directly. Defining a function to export fragments is as easy as this:
-*/
 
 function download(file: File) {
   const link = document.createElement("a");
@@ -123,11 +21,11 @@ function download(file: File) {
 }
 
 async function exportFragments() {
-  if (!fragments.groups.size) {
+  if (!ifLoader.fragments.groups.size) {
     return;
   }
-  const group = Array.from(fragments.groups.values())[0];
-  const data = fragments.export(group);
+  const group = Array.from(ifLoader.fragments.groups.values())[0];
+  const data = ifLoader.fragments.export(group);
   download(new File([new Blob([data])], "small.frag"));
 
   const properties = group.getLocalProperties();
@@ -136,14 +34,8 @@ async function exportFragments() {
   }
 }
 
-/* MD
-  ### 🧠🧼 Cleaning memory
-  ---
-  Now, just like in the `FragmentManager` tutorial, you will need to dispose the memory if your user wants to reset the state of the scene, especially if you are using Single Page Application technologies like React, Angular, Vue, etc. To do that, you can simply call the `dispose` method:
-*/
-
 function disposeFragments() {
-  fragments.dispose();
+  ifLoader.fragments.dispose();
 }
 
 /* MD
