@@ -6,22 +6,25 @@ const standardWorld = new GenerateWorld();
 const ifLoader = new InitIfLoader(standardWorld);
 
 const loadIfc = async () => {
-  await ifLoader.loadIfc("http://127.0.0.1:5500/models/03.ifc");
+  await ifLoader.loadIfc(
+    "http://127.0.0.1:5500/models/240717MAD03-STRC-DH-TEC-R24.ifc"
+  );
 };
 
-const download = (file: File) =>{
+const download = (file: File) => {
   const link = document.createElement("a");
   link.href = URL.createObjectURL(file);
   link.download = file.name;
   document.body.appendChild(link);
   link.click();
   link.remove();
-}
+};
 
 const exportFragments = () => {
   if (!ifLoader.fragments.groups.size) {
     return;
   }
+
   const group = Array.from(ifLoader.fragments.groups.values())[0];
   const data = ifLoader.fragments.export(group);
   download(new File([new Blob([data])], "small.frag"));
@@ -30,14 +33,13 @@ const exportFragments = () => {
   if (properties) {
     download(new File([JSON.stringify(properties)], "small.json"));
   }
-}
+};
 
 function disposeFragments() {
   ifLoader.fragments.dispose();
 }
 
 BUI.Manager.init();
-
 
 const panel = BUI.Component.create<BUI.PanelSection>(() => {
   return BUI.html`
