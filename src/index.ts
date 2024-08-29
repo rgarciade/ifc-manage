@@ -1,14 +1,17 @@
 import * as BUI from "@thatopen/ui";
 import { GenerateWorld } from "./generateWorld";
 import { InitIfLoader } from "./ifLoader";
+import { FragmentsGroup } from "@thatopen/fragments";
 
 const standardWorld = new GenerateWorld();
 const ifLoader = new InitIfLoader(standardWorld);
+let lastModel: FragmentsGroup;
 
-const loadIfc = async () => {
-  await ifLoader.loadIfc(
-    "http://127.0.0.1:5500/models/240717MAD03-STRC-DH-TEC-R24.ifc"
+const loadIfc = async (file: string) => {
+  lastModel = await ifLoader.loadIfc(
+    `http://127.0.0.1:5500/models/${file}.ifc`
   );
+  standardWorld.addModel(lastModel);
 };
 
 const download = (file: File) => {
@@ -39,19 +42,49 @@ function disposeFragments() {
   ifLoader.fragments.dispose();
 }
 
+// function fitLastModel(){
+//   const fragmentBbox = components.get(OBC.BoundingBoxer);
+// fragmentBbox.add(lastModel;
+// }
+
 BUI.Manager.init();
 
 const panel = BUI.Component.create<BUI.PanelSection>(() => {
   return BUI.html`
   <bim-panel active label="IFC Loader Tutorial" class="options-menu">
-    <bim-panel-section collapsed label="Controls">
+    <bim-panel-section collapsed label="Charge ifc">
       <bim-panel-section style="padding-top: 12px;">
      
-        <bim-button label="Load IFC"
+        <bim-button label="Load small 1 710KB IFC"
           @click="${async () => {
-            await loadIfc();
+            await loadIfc(`01`);
+          }}">
+        </bim-button>
+        <bim-button label="Load small 2 56M IFC"
+          @click="${async () => {
+            await loadIfc(`02`);
+          }}">
+        </bim-button>
+        <bim-button label="Load small 3 15,2M IFC"
+          @click="${async () => {
+            await loadIfc(`03`);
+          }}">
+           </bim-button>  
+        <bim-button label="Load 240717MAD03-STRC-DH-TEC-R24 19M IFC"
+          @click="${async () => {
+            await loadIfc(`240717MAD03-STRC-DH-TEC-R24`);
           }}">
         </bim-button>  
+        <bim-button label="Load BSA1X - bausa 13-15 240122 431M IFC"
+          @click="${async () => {
+            await loadIfc(`BSA1X - bausa 13-15 240122`);
+          }}">
+        </bim-button>  
+         <bim-button label="Fit last model"
+          @click="${() => {
+            standardWorld.fitLastModel();
+          }}">
+        </bim-button>
             
         <bim-button label="Export fragments"
           @click="${() => {
@@ -66,7 +99,6 @@ const panel = BUI.Component.create<BUI.PanelSection>(() => {
         </bim-button>
       
       </bim-panel-section>
-      
     </bim-panel>
   `;
 });
