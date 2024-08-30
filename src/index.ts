@@ -67,6 +67,9 @@ BUI.Manager.init();
 //   `;
 // });
 //document.body.append(panel);
+
+const viewport = document.createElement("bim-viewport");
+viewport.name = "viewer";
 const panel = BUI.Component.create<BUI.PanelSection>(() => {
   const [loadIfcBtn] = CUI.buttons.loadIfc({
     components: standardWorld.components,
@@ -138,7 +141,7 @@ app.layouts = {
       "panel viewport"
       / 23rem 1fr
     `,
-    elements: { panel, viewport: standardWorld.world.viewport },
+    elements: { panel, viewport: viewport },
   },
 };
 
