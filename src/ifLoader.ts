@@ -2,6 +2,7 @@ import * as OBC from "@thatopen/components";
 import * as WEBIFC from "web-ifc";
 import { GenerateWorld } from "./generateWorld";
 import * as THREE from "three";
+import * as CUI from "@thatopen/ui-obc";
 
 export class InitIfLoader {
   fragments: OBC.FragmentsManager;
@@ -14,6 +15,9 @@ export class InitIfLoader {
   // @ts-ignore
   generatedWorld: GenerateWorld;
   activeCuller: boolean;
+  classificationsTree: any;
+  updateClassificationsTree: any;
+  classifier: any;
   // @ts-ignore
   constructor(generatedWorld: GenerateWorld) {
     this.activeCuller = false;
@@ -35,6 +39,7 @@ export class InitIfLoader {
     const model = await this.fragmentIfcLoader.load(buffer);
     model.name = "example";
     model.position.set(0, 8.8, 0);
+
     //this.generatedWorld.world.scene.three.add(model);
     this.culler(model);
     return model;
@@ -62,8 +67,32 @@ export class InitIfLoader {
   }
 
   listenToFragmentLoaded() {
-    this.fragments.onFragmentsLoaded.add((model) => {
+    const [classificationsTree, updateClassificationsTree] =
+      CUI.tables.classificationTree({
+        components: this.generatedWorld.components,
+        classifications: [],
+      });
+    this.classificationsTree = classificationsTree;
+    this.updateClassificationsTree = updateClassificationsTree;
+    this.fragments.onFragmentsLoaded.add(async (model) => {
       console.log("fragment loaded:", model);
+      debugger;
+      const classifier = this.generatedWorld.components.get(OBC.Classifier);
+      // This creates a classification system named "entities"
+      classifier.byEntity(model);
+      // This creates a classification system named "predefinedTypes"
+      await classifier.byPredefinedType(model);
+      // This classifications in the state of the classifications tree.
+      // Is an array with the classification systems to be shown.
+      // You can pass the system name directly, or an object with system and label keys.
+      // The system key is the name in the classifier, and the label is how you want it to be shown in the table.
+      const classifications = [
+        { system: "entities", label: "Entities" },
+        { system: "predefinedTypes", label: "Predefined Types" },
+      ];
+      console.log(classifier.list);
+      this.updateClassificationsTree({ classifications });
+      console.log(classifier.list, classificationsTree);
     });
   }
 }

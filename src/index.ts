@@ -2,6 +2,7 @@ import * as BUI from "@thatopen/ui";
 import { GenerateWorld } from "./generateWorld";
 import { InitIfLoader } from "./ifLoader";
 import { FragmentsGroup } from "@thatopen/fragments";
+import * as CUI from "@thatopen/ui-obc";
 
 const standardWorld = new GenerateWorld();
 const ifLoader = new InitIfLoader(standardWorld);
@@ -49,12 +50,32 @@ function disposeFragments() {
 
 BUI.Manager.init();
 
+// const panel = BUI.Component.create(() => {
+//   const [loadIfcBtn] = CUI.buttons.loadIfc({
+//     components: standardWorld.components,
+//   });
+
+//   return BUI.html`
+//    <bim-panel label="Classifications Tree">
+//     <bim-panel-section label="Importing">
+//       ${loadIfcBtn}
+//     </bim-panel-section>
+//     <bim-panel-section label="Classifications">
+//       ${ifLoader.classificationsTree}
+//     </bim-panel-section>
+//    </bim-panel>
+//   `;
+// });
+//document.body.append(panel);
 const panel = BUI.Component.create<BUI.PanelSection>(() => {
+  const [loadIfcBtn] = CUI.buttons.loadIfc({
+    components: standardWorld.components,
+  });
   return BUI.html`
   <bim-panel active label="IFC Loader Tutorial" class="options-menu">
     <bim-panel-section collapsed label="Charge ifc">
       <bim-panel-section style="padding-top: 12px;">
-     
+
         <bim-button label="Load small 1 710KB IFC"
           @click="${async () => {
             await loadIfc(`01`);
@@ -69,29 +90,29 @@ const panel = BUI.Component.create<BUI.PanelSection>(() => {
           @click="${async () => {
             await loadIfc(`03`);
           }}">
-           </bim-button>  
+           </bim-button>
         <bim-button label="Load 240717MAD03-STRC-DH-TEC-R24 19M IFC"
           @click="${async () => {
             await loadIfc(`240717MAD03-STRC-DH-TEC-R24`);
           }}">
-        </bim-button>  
+        </bim-button>
         <bim-button label="Load BSA1X - bausa 13-15 240122 431M IFC"
           @click="${async () => {
             await loadIfc(`BSA1X - bausa 13-15 240122`);
           }}">
-        </bim-button>  
+        </bim-button>
          <bim-button label="Fit last model"
           @click="${() => {
             standardWorld.fitLastModel();
           }}">
         </bim-button>
-            
+
         <bim-button label="Export fragments"
           @click="${() => {
             exportFragments();
           }}">
-        </bim-button>  
-            
+        </bim-button>
+
         <bim-button label="Dispose fragments"
           @click="${() => {
             disposeFragments();
@@ -102,30 +123,44 @@ const panel = BUI.Component.create<BUI.PanelSection>(() => {
             ifLoader.toggleCuller();
           }}">
         </bim-button>
-      
+
+      </bim-panel-section>
+      <bim-panel-section label="Classifications">
+        ${ifLoader.classificationsTree}
       </bim-panel-section>
     </bim-panel>
   `;
 });
+const app = document.createElement("bim-grid");
+app.layouts = {
+  main: {
+    template: `
+      "panel viewport"
+      / 23rem 1fr
+    `,
+    elements: { panel, viewport: standardWorld.world.viewport },
+  },
+};
 
+app.layout = "main";
 document.body.append(panel);
 
 /* MD
   And we will make some logic that adds a button to the screen when the user is visiting our app from their phone, allowing to show or hide the menu. Otherwise, the menu would make the app unusable.
 */
 
-const button = BUI.Component.create<BUI.PanelSection>(() => {
-  return BUI.html`
-      <bim-button class="phone-menu-toggler" icon="solar:settings-bold"
-        @click="${() => {
-          if (panel.classList.contains("options-menu-visible")) {
-            panel.classList.remove("options-menu-visible");
-          } else {
-            panel.classList.add("options-menu-visible");
-          }
-        }}">
-      </bim-button>
-    `;
-});
+// const button = BUI.Component.create<BUI.PanelSection>(() => {
+//   return BUI.html`
+//       <bim-button class="phone-menu-toggler" icon="solar:settings-bold"
+//         @click="${() => {
+//           if (panel.classList.contains("options-menu-visible")) {
+//             panel.classList.remove("options-menu-visible");
+//           } else {
+//             panel.classList.add("options-menu-visible");
+//           }
+//         }}">
+//       </bim-button>
+//     `;
+// });
 
-document.body.append(button);
+// document.body.append(button);
