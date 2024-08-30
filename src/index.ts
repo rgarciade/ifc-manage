@@ -60,12 +60,7 @@ const panel = BUI.Component.create<BUI.PanelSection>(() => {
             await loadIfc(`01`);
           }}">
         </bim-button>
-        <bim-button label="Load small 2 56M IFC"
-          @click="${async () => {
-            await loadIfc(`02`);
-          }}">
-        </bim-button>
-        <bim-button label="Load small 3 15,2M IFC"
+        <bim-button label="Load small 2 15,2M IFC"
           @click="${async () => {
             await loadIfc(`03`);
           }}">
@@ -78,6 +73,17 @@ const panel = BUI.Component.create<BUI.PanelSection>(() => {
         <bim-button label="Load BSA1X - bausa 13-15 240122 431M IFC"
           @click="${async () => {
             await loadIfc(`BSA1X - bausa 13-15 240122`);
+          }}">
+        </bim-button>  
+        <bim-button label="example project location"
+          @click="${async () => {
+            await loadIfc(`example project location`);
+          }}">
+        </bim-button>  
+       
+  <bim-button label="Load EncofradoVigaPlasencia 837k IFC"
+          @click="${async () => {
+            await loadIfc(`EncofradoVigaPlasencia`);
           }}">
         </bim-button>  
          <bim-button label="Fit last model"
