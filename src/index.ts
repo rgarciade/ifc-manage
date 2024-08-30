@@ -20,21 +20,21 @@ const loadIfc = async () => {
   // @ts-ignore
   navigator.draw(lastModel);
 
-  const cullers = standardWorld.components.get(OBC.Cullers);
-  const culler = cullers.create(standardWorld.world);
-  culler.threshold = 10;
+  // const cullers = standardWorld.components.get(OBC.Cullers);
+  // const culler = cullers.create(standardWorld.world);
+  // culler.threshold = 10;
 
-  for (const child of lastModel.children) {
-    if (child instanceof THREE.InstancedMesh) {
-      culler.add(child);
-    }
-  }
+  // for (const child of lastModel.children) {
+  //   if (child instanceof THREE.InstancedMesh) {
+  //     culler.add(child);
+  //   }
+  // }
 
-  culler.needsUpdate = true;
+  // culler.needsUpdate = true;
 
-  standardWorld.world.camera.controls.addEventListener("sleep", () => {
-    culler.needsUpdate = true;
-  });
+  // standardWorld.world.camera.controls.addEventListener("sleep", () => {
+  //   culler.needsUpdate = true;
+  // });
   // @ts-ignore
   const sphere = new THREE.Sphere(undefined, 20);
   // @ts-ignore
