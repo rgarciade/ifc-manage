@@ -97,6 +97,11 @@ const panel = BUI.Component.create<BUI.PanelSection>(() => {
             disposeFragments();
           }}">
         </bim-button>
+         <bim-button label="active culler"
+          @click="${() => {
+            ifLoader.toggleCuller();
+          }}">
+        </bim-button>
       
       </bim-panel-section>
     </bim-panel>
