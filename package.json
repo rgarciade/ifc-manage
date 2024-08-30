@@ -24,6 +24,7 @@
   "homepage": "https://github.com/AnweshGangula/ifcjs-101#readme",
   "dependencies": {
     "@thatopen/components": "~2.1.27",
+    "@thatopen/components-front": "^2.2.2",
     "@thatopen/fragments": "~2.1.0",
     "@thatopen/ui": "~2.1.0",
     "@types/three": "0.160.0",

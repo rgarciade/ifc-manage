@@ -25,14 +25,18 @@ export class InitIfLoader {
     this.listenToFragmentLoaded();
   }
 
-  async loadIfc(url: string) {
-    const file = await fetch(url);
+  async loadIfc() {
+    const file = await fetch(`http://127.0.0.1:5500/models/road/road.frag`);
+
     const data = await file.arrayBuffer();
     const buffer = new Uint8Array(data);
-    const model = await this.fragmentIfcLoader.load(buffer);
-    model.name = "example";
-    model.position.set(0, 8.8, 0);
-    //this.generatedWorld.world.scene.three.add(model);
+    const model = await this.fragments.load(buffer);
+
+    const properties = await fetch(
+      `http://127.0.0.1:5500/models/road/road.json`
+    );
+
+    model.setLocalProperties(await properties.json());
     return model;
   }
 
