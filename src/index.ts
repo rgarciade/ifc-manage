@@ -1,18 +1,18 @@
 import * as BUI from "@thatopen/ui";
-import { GenerateWorld } from "./generateWorld";
+import { World } from "./world/world";
 import { InitIfLoader } from "./ifLoader";
 import { FragmentsGroup } from "@thatopen/fragments";
 import {rightPanel} from "./ui/rightPanel";
 
-const standardWorld = new GenerateWorld();
-const ifLoader = new InitIfLoader(standardWorld);
+const definedWorld = new World();
+const ifLoader = new InitIfLoader(definedWorld);
 let lastModel: FragmentsGroup;
 
 const loadIfc = async (file: string) => {
   lastModel = await ifLoader.loadIfc(
     `http://127.0.0.1:5500/models/${file}.ifc`
   );
-  standardWorld.addModel(lastModel);
+  definedWorld.addModel(lastModel);
 };
 
 const download = (file: File) => {
@@ -40,10 +40,11 @@ const exportFragments = () => {
 };
 
 function disposeFragments() {
-  ifLoader.fragments.dispose();
+    definedWorld.removeAllModels();
 }
-debugger;
+
 BUI.Manager.init();
+
 new rightPanel([
     {
         label: 'FC Loader Tutorial',
@@ -88,7 +89,7 @@ new rightPanel([
             {
                 type: 'button',
                 label: 'Fit last model',
-                function: () => standardWorld.fitLastModel(),
+                function: () => definedWorld.fitLastModel(),
             },
             {
                 type: 'button',
@@ -97,84 +98,33 @@ new rightPanel([
             },
             {
                 type: 'button',
-                label: 'Dispose fragments',
+                label: 'remove all models',
                 function: () => disposeFragments(),
             },
             {
-                type: 'button',
-                label: 'active culler',
-                function: () => ifLoader.toggleCuller(),
+                type: "button",
+                label: "toggle highlighter",
+                function: () => definedWorld.toggleHighlighter(),
+            },
+            {
+                type: 'checkbox',
+                label: "charge many models",
+                checked: true,
+                function: () => definedWorld.toggleEnableManyModels(),
+            },
+            {
+                type: 'checkbox',
+                label: "active culler 'ned new render'",
+                checked: false,
+                function: () => {
+                   definedWorld.toggleCuller();
+                },
             }
+
         ]
     },
 ]);
-//
-// const panel = BUI.Component.create<BUI.PanelSection>(() => {
-//   return BUI.html`
-//   <bim-panel active label="IFC Loader Tutorial" class="options-menu">
-//     <bim-panel-section collapsed label="Charge ifc">
-//       <bim-panel-section style="padding-top: 12px;">
-//
-//         <bim-button label="Load small 1 710KB IFC"
-//           @click="${async () => {
-//             await loadIfc(`01`);
-//           }}">
-//         </bim-button>
-//         <bim-button label="Load small 2 15,2M IFC"
-//           @click="${async () => {
-//             await loadIfc(`03`);
-//           }}">
-//            </bim-button>
-//         <bim-button label="Load 240717MAD03-STRC-DH-TEC-R24 19M IFC"
-//           @click="${async () => {
-//             await loadIfc(`240717MAD03-STRC-DH-TEC-R24`);
-//           }}">
-//         </bim-button>
-//         <bim-button label="Load BSA1X - bausa 13-15 240122 431M IFC"
-//           @click="${async () => {
-//             await loadIfc(`BSA1X - bausa 13-15 240122`);
-//           }}">
-//         </bim-button>
-//         <bim-button label="example project location"
-//           @click="${async () => {
-//             await loadIfc(`example project location`);
-//           }}">
-//         </bim-button>
-//
-//         <bim-button label="Load EncofradoVigaPlasencia 837k IFC"
-//           @click="${async () => {
-//             await loadIfc(`EncofradoVigaPlasencia`);
-//           }}">
-//         </bim-button>
-//          <bim-button label="Fit last model"
-//           @click="${() => {
-//             standardWorld.fitLastModel();
-//           }}">
-//         </bim-button>
-//
-//         <bim-button label="Export fragments"
-//           @click="${() => {
-//             exportFragments();
-//           }}">
-//         </bim-button>
-//
-//         <bim-button label="Dispose fragments"
-//           @click="${() => {
-//             disposeFragments();
-//           }}">
-//         </bim-button>
-//          <bim-button label="active culler"
-//           @click="${() => {
-//             ifLoader.toggleCuller();
-//           }}">
-//         </bim-button>
-//
-//       </bim-panel-section>
-//     </bim-panel>
-//   `;
-// });
-//
-// document.body.append(panel);
+
 
 /* MD
   And we will make some logic that adds a button to the screen when the user is visiting our app from their phone, allowing to show or hide the menu. Otherwise, the menu would make the app unusable.

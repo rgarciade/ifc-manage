@@ -31,7 +31,10 @@ export class rightPanel {
   constructor(sections: Section[]) {
     this.sections = sections;
     this.panel = this.generatePanel();
+    const mobileButton = this.generateMobileView(this.panel);
     document.body.append(this.panel);
+    document.body.append(mobileButton);
+
   }
   private generateSection(section: Section) {
     let elements: string [] = []
@@ -45,7 +48,7 @@ export class rightPanel {
 
     const elementHtmlGenerators = {
       button: (element: Button) => BUI.html`<bim-button label="${element.label}" @click="${ () => {element.function();}}"></bim-button>`,
-      checkbox: (element: Checkbox) => BUI.html`<bim-checkbox label="${element.label}" checked="${element.checked}" @change="${async () => {element.function();}}"></bim-checkbox>`
+      checkbox: (element: Checkbox) => BUI.html`<bim-checkbox label="${element.label}"  inverted ?checked="${element.checked}" @change="${async () => {element.function();}}"></bim-checkbox>`
     };
 
 
@@ -65,5 +68,21 @@ export class rightPanel {
             ${this.sections.map((section) => this.generateSection(section))}
           </bim-panel>
         `);
+  }
+  private generateMobileView(panel: BUI.PanelSection) {
+    const button = BUI.Component.create<BUI.PanelSection>(() => {
+    return BUI.html`
+      <bim-button class="phone-menu-toggler" icon="solar:settings-bold"
+        @click="${() => {
+          if (panel.classList.contains("options-menu-visible")) {
+            panel.classList.remove("options-menu-visible");
+          } else {
+            panel.classList.add("options-menu-visible");
+          }
+        }}">
+      </bim-button>
+    `;
+    });
+    return button;
   }
 }
