@@ -2,7 +2,7 @@ import * as BUI from "@thatopen/ui";
 import { World } from "./world/world";
 import { InitIfLoader } from "./ifLoader";
 import { FragmentsGroup } from "@thatopen/fragments";
-import {rightPanel} from "./ui/rightPanel";
+import {RightPanel} from "./ui/rightPanel";
 
 const definedWorld = new World();
 const ifLoader = new InitIfLoader(definedWorld);
@@ -45,7 +45,7 @@ function disposeFragments() {
 
 BUI.Manager.init();
 
-new rightPanel([
+new RightPanel([
     {
         label: 'temp charge models',
         collapsed: false,
