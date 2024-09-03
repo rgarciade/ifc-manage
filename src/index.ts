@@ -47,7 +47,7 @@ BUI.Manager.init();
 
 new rightPanel([
     {
-        label: 'FC Loader Tutorial',
+        label: 'temp charge models',
         collapsed: false,
         elements: [
             {
@@ -125,23 +125,3 @@ new rightPanel([
     },
 ]);
 
-
-/* MD
-  And we will make some logic that adds a button to the screen when the user is visiting our app from their phone, allowing to show or hide the menu. Otherwise, the menu would make the app unusable.
-*/
-
-// const button = BUI.Component.create<BUI.PanelSection>(() => {
-//   return BUI.html`
-//       <bim-button class="phone-menu-toggler" icon="solar:settings-bold"
-//         @click="${() => {
-//           if (panel.classList.contains("options-menu-visible")) {
-//             panel.classList.remove("options-menu-visible");
-//           } else {
-//             panel.classList.add("options-menu-visible");
-//           }
-//         }}">
-//       </bim-button>
-//     `;
-// });
-
-//document.body.append(button);
