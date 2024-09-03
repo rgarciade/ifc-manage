@@ -31,7 +31,13 @@ export class InitIfLoader {
     const data = await file.arrayBuffer();
     const buffer = new Uint8Array(data);
     const model = await this.fragmentIfcLoader.load(buffer);
-    model.name = "example";
+    debugger
+    if(model.name && model.name !== ''){
+      model.name = model.name;
+    }else{
+        model.name = "Model " + model.uuid;
+    }
+
     model.position.set(0, 8.8, 0);
     return model;
   }
