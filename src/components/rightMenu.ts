@@ -46,7 +46,6 @@ export class RightMenuElement extends LitElement {
         this.world.toggleEnableManyModels();
     }
     callActiveCuller() {
-        debugger
         this.world.toggleCuller();
     }
     callExportFragments() {

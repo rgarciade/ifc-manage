@@ -3,11 +3,12 @@ import { World } from "./controllers/world/world";
 import { InitIfLoader } from "./controllers/ifLoader";
 import { html,render } from 'lit';
 import "./components";
-BUI.Manager.init();
+import {Highlighter} from "./controllers/world/highlighter";
 
+BUI.Manager.init();
 const definedWorld = new World();
 const ifLoader = new InitIfLoader(definedWorld);
-
+const highlighter: Highlighter = new Highlighter(definedWorld);
 
 const loadIfc = async (file: string) => {
     let lastModel = await ifLoader.loadIfc(
@@ -17,10 +18,15 @@ const loadIfc = async (file: string) => {
 };
 
 
-const componentHtml = html`<right-menu-element 
+const rightMenuHtml = html`
+    <elements-relation-element .world="${definedWorld}"></elements-relation-element>
+    <right-menu-element 
         .loadIfc="${loadIfc}"
         .ifLoader="${ifLoader}"
         .world="${definedWorld}"
+        .highlighter="${highlighter}"
     ></right-menu-element>`;
 
-render(componentHtml, document.body);
+
+render(rightMenuHtml, document.body);
+
