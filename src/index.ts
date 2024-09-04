@@ -19,7 +19,7 @@ const loadIfc = async (file: string) => {
 
 
 const rightMenuHtml = html`
-    <elements-relation-element .world="${definedWorld}"></elements-relation-element>
+    <elements-relation-element .world="${definedWorld}"  .highlighter="${highlighter}"></elements-relation-element>
     <right-menu-element 
         .loadIfc="${loadIfc}"
         .ifLoader="${ifLoader}"

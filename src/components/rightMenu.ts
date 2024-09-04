@@ -21,12 +21,14 @@ export class RightMenuElement extends LitElement {
             sections: { type: Array },
             loadIfc: { type: Object },
             world: { type: Object },
+            highlighter: { type: Object },
             ifLoader: { type: Object },
         };
     }
     loadIfc: ((id: string) => void);
     world: any;
     ifLoader: any;
+    highlighter: any;
     constructor() {
         super();
         this.loadIfc = (id: string) => {};
@@ -39,8 +41,7 @@ export class RightMenuElement extends LitElement {
         this.world.fitLastModel();
     }
     callToggleHighlighter() {
-        debugger
-        this.world.toggleHighlighter();
+        this.highlighter.toggleHighlighter();
     }
     callChargeManyModels() {
         this.world.toggleEnableManyModels();

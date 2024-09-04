@@ -22,7 +22,7 @@ export class World extends GenerateWorld {
     toggleEnableManyModels() {
         this.enableManyModels = !this.enableManyModels;
     }
-    addModel(model: FragmentsGroup) {
+    async addModel(model: FragmentsGroup) {
         if (!this.enableManyModels) {
             this.removeAllModels();
         }
@@ -32,6 +32,8 @@ export class World extends GenerateWorld {
         const culler= this.createCuller(model);
         const complexModel = culler? {model, culler} : {model};
         this.complexModels.push(complexModel);
+        const indexer = this.world.components.get(OBC.IfcRelationsIndexer);
+        await indexer.process(model)
     }
     removeAllModels() {
         this.complexModels.forEach((complexModel) => {

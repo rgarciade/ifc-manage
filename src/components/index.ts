@@ -1,1 +1,2 @@
-export * from "./rightMenu/rightMenu";
+export * from "./rightMenu";
+export * from "./elementsRelations";

@@ -12,7 +12,6 @@ export class Highlighter{
     }
 
     async toggleHighlighter() {
-        debugger
         if(!this.enableHighlighter){
             this.activateHighlighter();
         }else{
