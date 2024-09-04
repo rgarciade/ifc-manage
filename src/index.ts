@@ -14,7 +14,7 @@ const loadIfc = async (file: string) => {
     let lastModel = await ifLoader.loadIfc(
     `http://127.0.0.1:5500/models/${file}.ifc`
   );
-  definedWorld.addModel(lastModel);
+  definedWorld.addModel(lastModel).then(() => {});
 };
 
 

@@ -55,7 +55,6 @@ export class World extends GenerateWorld {
 
     //culler
     toggleCuller() {
-        debugger
         if(this.haveCuller()){
             alert('los cullers activos no se eliminaran')
         }
