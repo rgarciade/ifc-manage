@@ -108,9 +108,6 @@ export class ElementsRelationsElement extends LitElement {
             attributesToInclude: () => {
                 const attributes: any[] = [
                     "Name",
-                    "ContainedInStructure",
-                    "HasProperties",
-                    "HasPropertySets",
                     (name: string) => name.includes("Value"),
                     (name: string) => name.startsWith("Material"),
                     (name: string) => name.startsWith("Relating"),
@@ -194,13 +191,13 @@ export class ElementsRelationsElement extends LitElement {
                       <div style="display: flex; gap: 0.5rem;">
                         <bim-dropdown @change=${this.onAttributesChange} multiple>
                           <bim-option label="Name" checked></bim-option> 
-                          <bim-option label="ContainedInStructure" checked></bim-option>
+                          <bim-option label="ContainedInStructure"></bim-option>
                           <bim-option label="ForLayerSet"></bim-option>
                           <bim-option label="LayerThickness"></bim-option>
-                          <bim-option label="HasProperties" checked></bim-option>
+                          <bim-option label="HasProperties"></bim-option>
                           <bim-option label="HasAssociations"></bim-option>
                           <bim-option label="HasAssignments"></bim-option>
-                          <bim-option label="HasPropertySets" checked></bim-option>
+                          <bim-option label="HasPropertySets"></bim-option>
                           <bim-option label="PredefinedType"></bim-option>
                           <bim-option label="Quantities"></bim-option>
                           <bim-option label="ReferencedSource"></bim-option>
