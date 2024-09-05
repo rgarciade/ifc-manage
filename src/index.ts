@@ -18,7 +18,7 @@ const loadIfc = async (file: string) => {
 };
 
 
-const rightMenuHtml = html`
+const interfaceHtml = html`
     <elements-relation-element .world="${definedWorld}"  .highlighter="${highlighter}"></elements-relation-element>
     <right-menu-element 
         .loadIfc="${loadIfc}"
@@ -28,5 +28,5 @@ const rightMenuHtml = html`
     ></right-menu-element>`;
 
 
-render(rightMenuHtml, document.body);
+render(interfaceHtml, document.body);
 
