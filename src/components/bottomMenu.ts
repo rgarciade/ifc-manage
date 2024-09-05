@@ -1,15 +1,43 @@
 import { LitElement, html,css } from 'lit';
-import * as CUI from "@thatopen/ui-obc";
 
-export class RightMenuElement extends LitElement {
+export class BottomMenuElement extends LitElement {
     static get styles() {
         return css`
-            .options-menu {
+            :host {
+                --bim-button--bgc: blue;
+                --bim-ui_main-base: #3c3737;
+            }
+
+            .bottom-menu {
                 position: fixed;
-                min-width: unset;
-                top: 5px;
-                right: 5px;
-                max-height: calc(100vh - 10px);
+                display: flex;
+                justify-content: center;
+                bottom: 15px;
+                gap: 10px;
+                left: 55%;
+                transform: translateX(-50%);
+                max-height: 100px;
+            }
+
+            .file-input-wrapper {
+                display: none;
+            }
+
+            .icon-button {
+                background-color: #007bff;
+                border: none;
+                border-radius: 13%;
+                color: white;
+                padding: 10px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .icon-button bim-icon {
+                color: white;
             }
         `;
     }
@@ -19,72 +47,44 @@ export class RightMenuElement extends LitElement {
      */
     static get properties() {
         return {
-            sections: { type: Array },
-            loadIfc: { type: Object },
             world: { type: Object },
-            highlighter: { type: Object },
-            ifLoader: { type: Object },
+            ifcLoader: { type: Object }
         };
     }
-    loadIfc: ((id: string) => void);
     world: any;
-    ifLoader: any;
-    highlighter: any;
+    ifcLoader: any;
+
     constructor() {
         super();
-        this.loadIfc = (id: string) => {};
     }
+    handleFileChange(event: Event) {
+        const input = event.target as HTMLInputElement;
+        if (input.files && input.files.length > 0) {
+            const file = input.files[0];
+            this.ifcLoader.loadIfcFromFile(file).then((model: any) => {
+                this.world.addModel(model).then(() => {});
+            } )
 
-    load(file: string) {
-        this.loadIfc(file);
+        }
     }
-    callFitModel() {
-        this.world.fitLastModel();
+    triggerFileInput() {
+        const fileInput = this.shadowRoot?.querySelector('#file-input');
+        if (fileInput && fileInput instanceof HTMLInputElement) {
+            fileInput.click();
+        }
     }
-    callToggleHighlighter() {
-        this.highlighter.toggleHighlighter();
-    }
-    callChargeManyModels() {
-        this.world.toggleEnableManyModels();
-    }
-    callActiveCuller() {
-        this.world.toggleCuller();
-    }
-    callExportFragments() {
-        this.ifLoader.exportFragments();
-    }
-    callRemoveAllModels() {
-        this.world.removeAllModels();
-    }
-
     render() {
-        const [loadIfcBtn] = CUI.buttons.loadIfc({ components: this.world.components });
-            return html`<div>
-                <bim-panel active label="Ferro Ifc panel" class="options-menu">
-                    <bim-panel-section collapsed label="temp charge models">
-                        <bim-panel-section style="padding-top: 12px;">
-                            ${loadIfcBtn}
-                            <bim-button label="Load small 1 710KB IFC" @click="${ () => {this.load('01')}}"></bim-button>
-                            <bim-button label="Load small 2 15,2M IFC" @click="${ () => {this.load('03')}}"></bim-button>
-                            <bim-button label="Load 240717MAD03-STRC-DH-TEC-R24 19M IFC" @click="${ () => {this.load('240717MAD03-STRC-DH-TEC-R24')}}"></bim-button>
-                            <bim-button label="Load BSA1X - bausa 13-15 240122 431M IFC" @click="${ () => {this.load('BSA1X - bausa 13-15 240122')}}"></bim-button>
-                            <bim-button label="example project location" @click="${ () => {this.load('example project location')}}"></bim-button>
-                            <bim-button label="Load EncofradoVigaPlasencia 837k IFC" @click="${ () => {this.load('EncofradoVigaPlasencia')}}"></bim-button>
-                        </bim-panel-section>
-                    </bim-panel-section>
-                        <bim-panel-section label="Actions">
-                            <bim-panel-section style="padding-top: 12px;">
-                                <bim-button label="Fit last mode" @click="${ () => {this.callFitModel()}}"></bim-button>
-                                <bim-button label="toggle highlighter" @click="${ () => {this.callToggleHighlighter()}}"></bim-button>
-                                <bim-checkbox label="charge many models"  inverted checked @change="${ () => {this.callChargeManyModels()}}}"></bim-checkbox>
-                                <bim-checkbox label="active culler"  inverted  @change="${async () => {debugger; this.callActiveCuller()}}"></bim-checkbox>
-                                <bim-button label="Export fragments" @click="${ () => {this.callExportFragments()}}"></bim-button>
-                                <bim-button label="remove all models" @click="${ () => {this.callRemoveAllModels()}}"></bim-button>
-                            </bim-panel-section>
-                        </bim-panel-section>
-                </bim-panel>
-            </div>`;
+            return html`
+                <div class="bottom-menu">
+                    <button class="icon-button" @click="${this.triggerFileInput}">
+                        <bim-icon class="arrow-toggle-relations" icon="hugeicons:file-upload"></bim-icon>
+                        <span>Load IFC</span>
+                    </button>
+                    <label class="file-input-wrapper">
+                        <input type="file" id="file-input" @change="${this.handleFileChange}">
+                    </label>
+                </div>`;
     }
 }
 
-window.customElements.define('right-menu-element', RightMenuElement);
+window.customElements.define('bottom-menu-element', BottomMenuElement);

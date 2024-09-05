@@ -23,6 +23,7 @@ export class World extends GenerateWorld {
         this.enableManyModels = !this.enableManyModels;
     }
     async addModel(model: FragmentsGroup) {
+        debugger
         if (!this.enableManyModels) {
             this.removeAllModels();
         }
@@ -51,6 +52,7 @@ export class World extends GenerateWorld {
         fragmentBbox.add(model);
         this.bbox = fragmentBbox.getMesh();
         fragmentBbox.reset();
+        this.fitLastModel();
     }
 
     //culler

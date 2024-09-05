@@ -29,20 +29,27 @@ export class InitIfLoader {
   async loadIfc(url: string) {
     const file = await fetch(url);
     const data = await file.arrayBuffer();
+   return await this.loadData(data);
+  };
+
+  async loadIfcFromFile(file: File) {
+    let data: ArrayBuffer;
+    data = await file.arrayBuffer();
+    return await this.loadData(data);
+  }
+  private loadData = async (data: ArrayBuffer) => {
     const buffer = new Uint8Array(data);
     const model = await this.fragmentIfcLoader.load(buffer);
-
-    if(model.name && model.name !== ''){
-      model.name = model.name;
-    }else{
-        model.name = "Model " + model.uuid;
-    }
-
-    model.position.set(0, model.position.y + 8.8, 0);
-    return model;
+    return this.addModel(model);
   }
 
-   exportFragments = () => {
+
+  private addModel(model: any) {
+    model.position.set(0, 8.8, 0);
+    this.generatedWorld.addModel(model).then(() => {})
+  }
+
+  exportFragments = () => {
     if (!this.fragments.groups.size) {
       return;
     }
@@ -56,7 +63,7 @@ export class InitIfLoader {
     if (properties) {
       this.download(new File([JSON.stringify(properties)], "small.json"));
     }
-  };
+  }
   private download = (file: File) => {
     const link = document.createElement("a");
     link.href = URL.createObjectURL(file);
@@ -68,7 +75,7 @@ export class InitIfLoader {
 
 
   listenToFragmentLoaded() {
-    this.fragments.onFragmentsLoaded.add((model) => {
+    this.fragments.onFragmentsLoaded.add(async (model) => {
       console.log("fragment loaded:", model);
     });
   }
