@@ -14,6 +14,26 @@ export class ElementsRelationsElement extends LitElement {
                 left: 0px;
                 height: 100vh;
                 border-radius: 0px;
+                max-width: 350px;
+                min-width: 350px;
+                transition: max-width 0.3s ease, min-width 0.3s ease;
+            }
+            .big-elements-relations {
+                max-width: 1000px;
+                min-width: 1000px;
+            }
+            .arrow-toggle-relations{
+                color: white;
+                transform: rotate(0deg);
+                transition: transform 0.3s ease;
+                margin-top: 5px;
+                right: 5px;
+                position: absolute;
+            }
+            .rotate-180 {
+                margin-top: 6px;
+                transform: rotate(180deg);
+                transition: transform 0.3s ease;
             }
         `;
     }
@@ -178,17 +198,31 @@ export class ElementsRelationsElement extends LitElement {
         });
     };
 
+    toggleElementsRelation(){
+        const panel = this.shadowRoot?.querySelector('.elements-relations');
+        const icon = this.shadowRoot?.querySelector('.arrow-toggle-relations');
+        if (panel) {
+            panel.classList.toggle('big-elements-relations');
+        }
+        if (icon) {
+            icon.classList.toggle('rotate-180');
+        }
+    }
+
 
     render() {
             return html`<div>
-                <bim-panel active label="Elements Relation" class="elements-relations">
-                    <bim-panel-section label="Entity Attributes" fixed>
+                <bim-panel active label="Elements Relation" class="elements-relations small-elements-relation">
+                    <bim-icon  class="arrow-toggle-relations" icon="fluent:arrow-right-12-filled" @click="${()=>{this.toggleElementsRelation()}}" style="color"></bim-icon>
                     <div style="display: flex; gap: 0.5rem; justify-content: space-between;">
+                        <bim-panel-section label="Entity Attributes" fixed>
                       <div style="display: flex; gap: 0.5rem;">
                         <bim-text-input @input=${this.onSearchInput} type="search" placeholder="Search" debounce="250"></bim-text-input>
                         <bim-checkbox @change=${this.onPreserveStructureChange} label="Preserve Structure" inverted checked></bim-checkbox>
                       </div>
-                      <div style="display: flex; gap: 0.5rem;">
+                      <div style="display: flex; gap: 0.5rem; padding-top: 10px">
+                          <bim-button @click=${this.onCopyTSV} icon="solar:copy-bold" tooltip-title="Copy TSV" tooltip-text="Copy the table contents as tab separated text values, so you can copy them into a spreadsheet."></bim-button>
+                          <bim-button @click=${this.onExportJSON} icon="ph:export-fill" tooltip-title="Export JSON" tooltip-text="Download the table contents as a JSON file."></bim-button>
                         <bim-dropdown @change=${this.onAttributesChange} multiple>
                           <bim-option label="Name" checked></bim-option> 
                           <bim-option label="ContainedInStructure"></bim-option>
@@ -205,12 +239,10 @@ export class ElementsRelationsElement extends LitElement {
                           <bim-option label="Prefix"></bim-option>
                           <bim-option label="LongName"></bim-option>
                         </bim-dropdown>
-                        <bim-button @click=${this.onCopyTSV} icon="solar:copy-bold" tooltip-title="Copy TSV" tooltip-text="Copy the table contents as tab separated text values, so you can copy them into a spreadsheet."></bim-button>
-                        <bim-button @click=${this.onExportJSON} icon="ph:export-fill" tooltip-title="Export JSON" tooltip-text="Download the table contents as a JSON file."></bim-button>
-          </div>
-        </div>
-        ${this.attributesTable}
-      </bim-panel-section>
+                    </div>
+                    </div>
+                    ${this.attributesTable}
+                  </bim-panel-section>
                 </bim-panel>
             </div>`;
     }

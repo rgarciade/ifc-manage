@@ -72,7 +72,6 @@ export class World extends GenerateWorld {
     }
     createCuller(model: FragmentsGroup) {
         if (!this.enableCuller) return;
-        debugger
         this.listenerCuller()
         const cullers = this.components.get(OBC.Cullers);
         const culler = cullers.create(this.world);
