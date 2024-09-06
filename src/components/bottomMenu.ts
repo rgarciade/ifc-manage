@@ -22,28 +22,6 @@ export class BottomMenuElement extends LitElement {
             .file-input-wrapper {
                 display: none;
             }
-
-            .icon-button {
-                background-color: #007bff;
-                border: none;
-                border-radius: 7px;
-                color: white;
-                cursor: pointer;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                padding: 11px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                margin: 4px 2px;
-            }
-
-            .icon-button bim-icon {
-                color: white;
-                position: relative;
-                bottom: -2px;
-            }
         `;
     }
 
@@ -84,14 +62,8 @@ export class BottomMenuElement extends LitElement {
             return html`
                 <div>
                     <div class="bottom-menu">
-                        <button class="icon-button" @click="${this.triggerFileInput}">
-                            <bim-icon class="arrow-toggle-relations" icon="hugeicons:file-upload"></bim-icon>
-                            <span>Load IFC</span>
-                        </button>
-                        <button class="icon-button" @click="${this.callActiveCuller}">
-                            <bim-icon class="arrow-toggle-relations" icon="clarity:power-solid-alerted"></bim-icon>
-                            <span>Activar Optimizador</span>
-                        </button>
+                        <button-menu-element icon="hugeicons:file-upload" text="Load IFC" .clickAction="${this.triggerFileInput}"></button-menu-element>
+                        <button-menu-element icon="clarity:power-solid-alerted" text="Activate Optimizer" .clickAction="${this.callActiveCuller}"></button-menu-element>
                         <label class="file-input-wrapper">
                             <input type="file" id="file-input" @change="${this.handleFileChange}">
                         </label>
