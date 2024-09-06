@@ -4,9 +4,10 @@ import { InitIfLoader } from "./controllers/ifLoader";
 import { html,render } from 'lit';
 import "./components";
 import {Highlighter} from "./controllers/world/highlighter";
+import {TypeOfWorld} from "./controllers/world/generateWorld";
 
 BUI.Manager.init();
-const definedWorld = new World();
+const definedWorld = new World(TypeOfWorld.PostProduction);
 const ifLoader = new InitIfLoader(definedWorld);
 const highlighter: Highlighter = new Highlighter(definedWorld);
 

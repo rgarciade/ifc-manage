@@ -2,6 +2,7 @@
 import * as OBC from "@thatopen/components";
 import * as WEBIFC from "web-ifc";
 import { World } from "./world/world";
+import { dispatchEvent } from "../utils/dispatchEvent";
 
 export class InitIfLoader {
   fragments: OBC.FragmentsManager;
@@ -26,19 +27,19 @@ export class InitIfLoader {
   }
 
   async loadIfc(url: string) {
-    this.dispatchEvent('loadingStart');
+    dispatchEvent('loadingStart');
     const file = await fetch(url);
     const data = await file.arrayBuffer();
     const model = await this.loadData(data);
-    this.dispatchEvent('loadingEnd');
+    dispatchEvent('loadingEnd');
     return model;
   }
 
   async loadIfcFromFile(file: File) {
-    this.dispatchEvent('loadingStart');
+    dispatchEvent('loadingStart');
     const data = await file.arrayBuffer();
     const model = await this.loadData(data);
-    this.dispatchEvent('loadingEnd');
+    dispatchEvent('loadingEnd');
     return model;
   }
 
@@ -49,10 +50,9 @@ export class InitIfLoader {
     return this.addModel(model);
   }
   private checkFileSize(size: number) {
-    this.dispatchEvent('fileSize', { size });
-    debugger
+    dispatchEvent('fileSize', { size });
     if (size > 40 * 1024 * 1024) { // 40MB in bytes
-      this.dispatchEvent('largeFile', { size });
+      dispatchEvent('largeFile', { size });
     }
   }
 
@@ -61,10 +61,6 @@ export class InitIfLoader {
     this.generatedWorld.addModel(model).then(() => {});
   }
 
-  private dispatchEvent(eventName: string, detail: any = {}) {
-    const event = new CustomEvent(eventName, { detail: { loader: this, ...detail } });
-    window.dispatchEvent(event);
-  }
 
   listenToFragmentLoaded() {
     this.fragments.onFragmentsLoaded.add(async (model) => {
