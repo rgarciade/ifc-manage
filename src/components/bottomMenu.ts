@@ -80,6 +80,10 @@ export class BottomMenuElement extends LitElement {
                         <bim-icon class="arrow-toggle-relations" icon="hugeicons:file-upload"></bim-icon>
                         <span>Load IFC</span>
                     </button>
+                    <button class="icon-button" @click="${this.triggerFileInput}">
+                        <bim-icon class="arrow-toggle-relations" icon="clarity:power-solid-alerted"></bim-icon>
+                        <span>Activar Optimizador</span>
+                    </button>
                     <label class="file-input-wrapper">
                         <input type="file" id="file-input" @change="${this.handleFileChange}">
                     </label>
