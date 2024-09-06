@@ -1,7 +1,7 @@
+// src/controllers/ifLoader.ts
 import * as OBC from "@thatopen/components";
 import * as WEBIFC from "web-ifc";
 import { World } from "./world/world";
-
 
 export class InitIfLoader {
   fragments: OBC.FragmentsManager;
@@ -11,9 +11,8 @@ export class InitIfLoader {
     WEBIFC.IFCREINFORCINGBAR,
     WEBIFC.IFCREINFORCINGELEMENT,
   ];
-  // @ts-ignore
   generatedWorld: World;
-  // @ts-ignore
+
   constructor(generatedWorld: World) {
     this.generatedWorld = generatedWorld;
     this.fragments = this.generatedWorld.components.get(OBC.FragmentsManager);
@@ -27,52 +26,45 @@ export class InitIfLoader {
   }
 
   async loadIfc(url: string) {
+    this.dispatchEvent('loadingStart');
     const file = await fetch(url);
     const data = await file.arrayBuffer();
-   return await this.loadData(data);
-  };
+    const model = await this.loadData(data);
+    this.dispatchEvent('loadingEnd');
+    return model;
+  }
 
   async loadIfcFromFile(file: File) {
-    let data: ArrayBuffer;
-    data = await file.arrayBuffer();
-    return await this.loadData(data);
+    this.dispatchEvent('loadingStart');
+    const data = await file.arrayBuffer();
+    const model = await this.loadData(data);
+    this.dispatchEvent('loadingEnd');
+    return model;
   }
-  private loadData = async (data: ArrayBuffer) => {
+
+  private async loadData(data: ArrayBuffer) {
+    this.checkFileSize(data.byteLength);
     const buffer = new Uint8Array(data);
     const model = await this.fragmentIfcLoader.load(buffer);
     return this.addModel(model);
   }
-
+  private checkFileSize(size: number) {
+    this.dispatchEvent('fileSize', { size });
+    debugger
+    if (size > 40 * 1024 * 1024) { // 40MB in bytes
+      this.dispatchEvent('largeFile', { size });
+    }
+  }
 
   private addModel(model: any) {
     model.position.set(0, 8.8, 0);
-    this.generatedWorld.addModel(model).then(() => {})
+    this.generatedWorld.addModel(model).then(() => {});
   }
 
-  exportFragments = () => {
-    if (!this.fragments.groups.size) {
-      return;
-    }
-
-
-    const group = Array.from(this.fragments.groups.values())[0];
-    const data = this.fragments.export(group);
-    this.download(new File([new Blob([data])], "small.frag"));
-
-    const properties = group.getLocalProperties();
-    if (properties) {
-      this.download(new File([JSON.stringify(properties)], "small.json"));
-    }
+  private dispatchEvent(eventName: string, detail: any = {}) {
+    const event = new CustomEvent(eventName, { detail: { loader: this, ...detail } });
+    window.dispatchEvent(event);
   }
-  private download = (file: File) => {
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(file);
-    link.download = file.name;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  }
-
 
   listenToFragmentLoaded() {
     this.fragments.onFragmentsLoaded.add(async (model) => {

@@ -26,7 +26,9 @@ const interfaceHtml = html`
         .ifLoader="${ifLoader}"
         .world="${definedWorld}"
         .highlighter="${highlighter}"
-    ></right-menu-element>`;
+    ></right-menu-element>
+    <loader-element></loader-element>
+`;
 
 
 render(interfaceHtml, document.body);

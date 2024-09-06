@@ -41,13 +41,12 @@ export class BottomMenuElement extends LitElement {
 
             .icon-button bim-icon {
                 color: white;
+                position: relative;
+                bottom: -2px;
             }
         `;
     }
 
-    /**
-     * @property {Number} width - Width of the button.
-     */
     static get properties() {
         return {
             world: { type: Object },
@@ -83,19 +82,21 @@ export class BottomMenuElement extends LitElement {
 
     render() {
             return html`
-                <div class="bottom-menu">
-                    <button class="icon-button" @click="${this.triggerFileInput}">
-                        <bim-icon class="arrow-toggle-relations" icon="hugeicons:file-upload"></bim-icon>
-                        <span>Load IFC</span>
-                    </button>
-                    <button class="icon-button" @click="${this.callActiveCuller}">
-                        <bim-icon class="arrow-toggle-relations" icon="clarity:power-solid-alerted"></bim-icon>
-                        <span>Activar Optimizador</span>
-                    </button>
-                    <label class="file-input-wrapper">
-                        <input type="file" id="file-input" @change="${this.handleFileChange}">
-                    </label>
-                </div>`;
+                <div>
+                    <div class="bottom-menu">
+                        <button class="icon-button" @click="${this.triggerFileInput}">
+                            <bim-icon class="arrow-toggle-relations" icon="hugeicons:file-upload"></bim-icon>
+                            <span>Load IFC</span>
+                        </button>
+                        <button class="icon-button" @click="${this.callActiveCuller}">
+                            <bim-icon class="arrow-toggle-relations" icon="clarity:power-solid-alerted"></bim-icon>
+                            <span>Activar Optimizador</span>
+                        </button>
+                        <label class="file-input-wrapper">
+                            <input type="file" id="file-input" @change="${this.handleFileChange}">
+                        </label>
+                    </div>
+               `;
     }
 }
 
