@@ -13,9 +13,6 @@ export class RightMenuElement extends LitElement {
         `;
     }
 
-    /**
-     * @property {Number} width - Width of the button.
-     */
     static get properties() {
         return {
             sections: { type: Array },
