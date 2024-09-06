@@ -26,14 +26,17 @@ export class BottomMenuElement extends LitElement {
             .icon-button {
                 background-color: #007bff;
                 border: none;
-                border-radius: 13%;
+                border-radius: 7px;
                 color: white;
-                padding: 10px;
                 cursor: pointer;
-                display: flex;
                 align-items: center;
                 justify-content: center;
                 gap: 10px;
+                padding: 11px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                margin: 4px 2px;
             }
 
             .icon-button bim-icon {
@@ -73,6 +76,11 @@ export class BottomMenuElement extends LitElement {
             fileInput.click();
         }
     }
+
+    callActiveCuller() {
+        this.world.toggleCuller();
+    }
+
     render() {
             return html`
                 <div class="bottom-menu">
@@ -80,7 +88,7 @@ export class BottomMenuElement extends LitElement {
                         <bim-icon class="arrow-toggle-relations" icon="hugeicons:file-upload"></bim-icon>
                         <span>Load IFC</span>
                     </button>
-                    <button class="icon-button" @click="${this.triggerFileInput}">
+                    <button class="icon-button" @click="${this.callActiveCuller}">
                         <bim-icon class="arrow-toggle-relations" icon="clarity:power-solid-alerted"></bim-icon>
                         <span>Activar Optimizador</span>
                     </button>
