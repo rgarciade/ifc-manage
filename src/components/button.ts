@@ -27,7 +27,7 @@ export class ButtonMenuElement extends LitElement {
     }
     static get properties() {
         return {
-            clickAction: { type: Object },
+            clickAction: { type: Function },
             icon: { type: String },
             text: { type: String }
         };
@@ -42,6 +42,7 @@ export class ButtonMenuElement extends LitElement {
         super();
         this.icon = 'file';
         this.text = 'Load Sample';
+        this.clickAction = () => {};
     }
 
     render() {

@@ -42,7 +42,9 @@ export class BottomMenuElement extends LitElement {
         if (input.files && input.files.length > 0) {
             const file = input.files[0];
             this.ifcLoader.loadIfcFromFile(file).then((model: any) => {
-                this.world.addModel(model).then(() => {});
+                if(model){
+                    this.world.addModel(model).then(() => {});
+                }
             } )
 
         }
@@ -62,8 +64,8 @@ export class BottomMenuElement extends LitElement {
             return html`
                 <div>
                     <div class="bottom-menu">
-                        <button-menu-element icon="hugeicons:file-upload" text="Load IFC" .clickAction="${this.triggerFileInput}"></button-menu-element>
-                        <button-menu-element icon="clarity:power-solid-alerted" text="Activate Optimizer" .clickAction="${this.callActiveCuller}"></button-menu-element>
+                        <button-menu-element icon="hugeicons:file-upload" text="Load IFC" @click="${this.triggerFileInput}"></button-menu-element>
+                        <button-menu-element icon="clarity:power-solid-alerted" text="Activate Optimizer" @click="${this.callActiveCuller}"></button-menu-element>
                         <label class="file-input-wrapper">
                             <input type="file" id="file-input" @change="${this.handleFileChange}">
                         </label>

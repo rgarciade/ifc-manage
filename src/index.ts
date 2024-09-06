@@ -11,10 +11,9 @@ const ifLoader = new InitIfLoader(definedWorld);
 const highlighter: Highlighter = new Highlighter(definedWorld);
 
 const loadIfc = async (file: string) => {
-    let lastModel = await ifLoader.loadIfc(
+    await ifLoader.loadIfc(
         `http://127.0.0.1:5500/models/${file}.ifc`
     );
-    //definedWorld.addModel(lastModel).then(() => {});
 };
 
 
