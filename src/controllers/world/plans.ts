@@ -4,18 +4,18 @@ import {FragmentsGroup} from "@thatopen/fragments";
 import {Classifier} from "./classifier";
 
 export class Plans{
-    generatedWorld: World;
+    worldContent: World;
     model: FragmentsGroup;
     plans: OBCF.Plans;
     classifier: Classifier | undefined;
-    constructor(generatedWorld: World, model: FragmentsGroup) {
-        this.generatedWorld = generatedWorld;
+    constructor(worldContent: World, model: FragmentsGroup) {
+        this.worldContent = worldContent;
         this.model = model;
-        this.plans = this.generatedWorld.components.get(OBCF.Plans);
-        this.plans.world = this.generatedWorld.world;
+        this.plans = this.worldContent.components.get(OBCF.Plans);
+        this.plans.world = this.worldContent.world;
     }
     async generate() {
         await this.plans.generate(this.model)
-        this.classifier = new Classifier(this.generatedWorld, this.model);
+        this.classifier = new Classifier(this.worldContent, this.model);
     }
 }

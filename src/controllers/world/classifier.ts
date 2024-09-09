@@ -6,7 +6,7 @@ import {FragmentsGroup} from "@thatopen/fragments";
 import * as THREE from "three";
 
 export class Classifier {
-    generatedWorld: World;
+    worldContent: World;
     model: FragmentsGroup;
     classifier: OBC.Classifier ;
     edges: OBCF.ClipEdges;
@@ -14,10 +14,10 @@ export class Classifier {
     thickItems: any;
     thinItems: any;
     constructor(world: World, model: FragmentsGroup) {
-        this.generatedWorld = world;
+        this.worldContent = world;
         this.model = model;
-        this.classifier = this.generatedWorld.components.get(OBC.Classifier);
-        this.edges = this.generatedWorld.components.get(OBCF.ClipEdges);
+        this.classifier = this.worldContent.components.get(OBC.Classifier);
+        this.edges = this.worldContent.components.get(OBCF.ClipEdges);
         this.generate();
     }
     generate(){
@@ -38,7 +38,7 @@ export class Classifier {
     }
 
     async styles(){
-        const fragments = this.generatedWorld.components.get(OBC.FragmentsManager);
+        const fragments = this.worldContent.components.get(OBC.FragmentsManager);
         const grayFill = new THREE.MeshBasicMaterial({ color: "gray", side: 2 });
         const blackLine = new THREE.LineBasicMaterial({ color: "black" });
         const blackOutline = new THREE.MeshBasicMaterial({
@@ -51,7 +51,7 @@ export class Classifier {
         this.edges.styles.create(
             "thick",
             new Set(),
-            this.generatedWorld.world,
+            this.worldContent.world,
             blackLine,
             grayFill,
             blackOutline,
@@ -64,7 +64,7 @@ export class Classifier {
             this.edges.styles.list.thick.fragments[fragID] = new Set(this.thickItems[fragID]);
             this.edges.styles.list.thick.meshes.add(mesh);
         }
-        this.edges.styles.create("thin", new Set(), this.generatedWorld.world);
+        this.edges.styles.create("thin", new Set(), this.worldContent.world);
 
         for (const fragID in this.thinItems) {
             const foundFrag = fragments.list.get(fragID);

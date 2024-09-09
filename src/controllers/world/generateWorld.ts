@@ -70,7 +70,7 @@ export class GenerateWorld {
         this.container
     );
     this.world.camera = new OBC.OrthoPerspectiveCamera(this.components);
-    this.world.renderer.postproduction.enabled = true;
+    this.world.renderer.postproduction.enabled = false;
     this.world.renderer.postproduction.customEffects.outlineEnabled = true;
 
     this.components.init();
@@ -80,6 +80,11 @@ export class GenerateWorld {
     this.addPostProductionGrids();
   }
 
+  togglePostProduction() {
+    debugger
+    this.world.renderer.postproduction.enabled = !this.world.renderer.postproduction.enabled;
+    this.world.reset();
+  }
 
 
   private createWorld() {

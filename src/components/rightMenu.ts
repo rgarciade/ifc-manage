@@ -90,7 +90,7 @@ export class RightMenuElement extends LitElement {
         const minGloss = this.world.world.renderer!.postproduction.customEffects.minGloss;
 
         const defaultBackground = this.world.world.scene.three.background;
-
+        console.log('plans',plans)
         return html`
             <bim-panel-section collapsed label="planos">
                 ${plans.list.map((plan: { name: unknown; classifier: { setColor: (arg0: any, arg1: THREE.Color) => void; }; modelItems: any; id: any; }) => html`

@@ -16,7 +16,7 @@ interface complexModel {
 
 export class World extends GenerateWorld {
     enableManyModels: boolean = true;
-    enableCuller: boolean = false;
+    enableCuller: boolean = true;
     cullers: OBC.Cullers [] = [];
 
     complexModels: complexModel[] = [];
@@ -34,18 +34,20 @@ export class World extends GenerateWorld {
         super.addModel(model);
         this.defineLastModel(model);
 
+        await this.fillComplexModel(model);
+    }
+    async fillComplexModel(model: FragmentsGroup) {
+        const indexer = this.world.components.get(OBC.IfcRelationsIndexer);
+        await indexer.process(model)
         const culler= this.createCuller(model);
         const complexModel:complexModel = culler? {model, culler} : {model};
-        debugger
+
         if(this.typeOfWorld === TypeOfWorld.PostProduction){
             const plansModel = new Plans(this, model);
             await plansModel.generate();
             complexModel.plans = plansModel.plans;
         }
-        debugger
         this.complexModels.push(complexModel);
-        const indexer = this.world.components.get(OBC.IfcRelationsIndexer);
-        await indexer.process(model)
     }
     removeAllModels() {
         this.complexModels.forEach((complexModel) => {

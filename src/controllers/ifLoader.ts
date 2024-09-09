@@ -12,13 +12,17 @@ export class InitIfLoader {
     WEBIFC.IFCREINFORCINGBAR,
     WEBIFC.IFCREINFORCINGELEMENT,
   ];
-  generatedWorld: World;
+  worldContent: World;
 
-  constructor(generatedWorld: World) {
-    this.generatedWorld = generatedWorld;
-    this.fragments = this.generatedWorld.components.get(OBC.FragmentsManager);
-    this.fragmentIfcLoader = this.generatedWorld.components.get(OBC.IfcLoader);
-    this.fragmentIfcLoader.setup();
+  constructor(worldContent: World) {
+    this.worldContent = worldContent;
+    this.fragments = this.worldContent.components.get(OBC.FragmentsManager);
+    this.fragmentIfcLoader = this.worldContent.components.get(OBC.IfcLoader);
+
+  }
+
+  async setup() {
+    await this.fragmentIfcLoader.setup();
     for (const cat of this.excludedCats) {
       this.fragmentIfcLoader.settings.excludedCategories.add(cat);
     }
@@ -47,7 +51,7 @@ export class InitIfLoader {
     this.checkFileSize(data.byteLength);
     const buffer = new Uint8Array(data);
     const model = await this.fragmentIfcLoader.load(buffer);
-    return this.addModel(model);
+    return await this.addModel(model);
   }
   private checkFileSize(size: number) {
     dispatchEvent('fileSize', { size });
@@ -56,9 +60,9 @@ export class InitIfLoader {
     }
   }
 
-  private addModel(model: any) {
-    model.position.set(0, 8.8, 0);
-    this.generatedWorld.addModel(model).then(() => {});
+   private async addModel(model: any) {
+    await this.worldContent.addModel(model);
+    return model;
   }
 
 
