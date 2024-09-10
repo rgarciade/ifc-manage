@@ -9,7 +9,6 @@ import {TypeOfWorld} from "./controllers/world/generateWorld";
 BUI.Manager.init();
 
 (async () => {
-
     const worldContent = new World(TypeOfWorld.PostProduction);
     const ifLoader = new InitIfLoader(worldContent);
     await ifLoader.setup()
@@ -23,8 +22,7 @@ BUI.Manager.init();
         .world="${worldContent}"
         .highlighter="${highlighter}"
     ></right-menu-element>
-    <loader-element></loader-element>
-`;
+    <loader-element></loader-element>`;
 
     render(interfaceHtml, document.body);
 })();
