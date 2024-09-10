@@ -9,6 +9,7 @@ import {TypeOfWorld} from "./controllers/world/generateWorld";
 BUI.Manager.init();
 
 (async () => {
+
     const worldContent = new World(TypeOfWorld.PostProduction);
     const ifLoader = new InitIfLoader(worldContent);
     await ifLoader.setup()
