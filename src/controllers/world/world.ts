@@ -7,7 +7,7 @@ import {Plans} from "./plans";
 import { dispatchEvent}  from "../../utils/dispatchEvent";
 import {Classifier} from "./classifier";
 
-interface complexModel {
+export interface complexModel {
     model: FragmentsGroup;
     culler?: OBC.MeshCullerRenderer;
     plans?: OBCF.Plans;
@@ -80,6 +80,7 @@ export class World extends GenerateWorld {
             });
             this.listenerCuller();
         }
+        console.log('???enabled culler??????', this.enableCuller)
         return true
     }
     private haveCuller() {

@@ -1,4 +1,5 @@
-import { LitElement, html,css } from 'lit';
+// Update ToggleElement to dispatch a custom event
+import { LitElement, html, css } from 'lit';
 
 export class ToggleElement extends LitElement {
     static get styles() {
@@ -10,14 +11,12 @@ export class ToggleElement extends LitElement {
                 height: 34px;
             }
 
-            /* Hide default HTML checkbox */
             .switch input {
                 opacity: 0;
                 width: 0;
                 height: 0;
             }
 
-            /* The slider */
             .slider {
                 position: absolute;
                 cursor: pointer;
@@ -56,36 +55,45 @@ export class ToggleElement extends LitElement {
                 transform: translateX(26px);
             }
 
-            /* Rounded sliders */
             .slider.round {
                 border-radius: 34px;
             }
 
             .slider.round:before {
                 border-radius: 50%;
-            }`
+            }
+        `;
     }
+
     static get properties() {
         return {
             clickAction: { type: Function },
+            active: { type: Boolean }
         };
     }
-    clickAction: any;
 
-    callClickAction() {
-        this.clickAction();
-    }
+    clickAction: any;
+    active: boolean;
+
     constructor() {
         super();
         this.clickAction = () => {};
+        this.active = false;
+    }
+
+    callClickAction() {
+        this.active = !this.active;
+        console.log('1-bottttt-toggle changed');
+        this.dispatchEvent(new CustomEvent('toggle-changed', { detail: { active: this.active } }));
+        console.log('2-botttt-after toggle changed');
     }
 
     render() {
         return html`
-                <label class="switch" @click="${() => this.callClickAction()}">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
+            <label class="switch">
+                <input type="checkbox" ?checked="${this.active}">
+                <span class="slider round"></span>
+            </label>
         `;
     }
 }

@@ -67,7 +67,7 @@ export class InitIfLoader {
 
 
   listenToFragmentLoaded() {
-    this.fragments.onFragmentsLoaded.add(async (model) => {
+    this.fragments.onFragmentsLoaded.add((model) => {
       console.log("fragment loaded:", model);
     });
   }

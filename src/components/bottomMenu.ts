@@ -51,24 +51,26 @@ export class BottomMenuElement extends LitElement {
         }
     }
 
-    callActiveCuller() {
+    callToggleCuller() {
+        console.log('1-top-toggle culler')
         this.world.toggleCuller();
-    }
-    togglePostProduction() {
-        debugger
-        this.world.togglePostProduction();
+        console.log('2-top-after toggle culler')
     }
 
+    isCullerEnable() {
+        return this.world.enableCuller
+    }
+    // <button-element icon="clarity:power-solid-alerted" text="Activate Optimizer" @click="${this.callToggleCuller}"></button-element>
+    // <div>
+    //     <toggle-element @toggle-changed="${this.callToggleCuller}" .active="${this.isCullerEnable}"></toggle-element>
+    //     <label>Post Production</label>
+    // </div>
     render() {
             return html`
                 <div>
                     <div class="bottom-menu">
                         <button-element icon="hugeicons:file-upload" text="Load IFC" @click="${this.triggerFileInput}"></button-element>
-                        <button-element icon="clarity:power-solid-alerted" text="Activate Optimizer" @click="${this.callActiveCuller}"></button-element>
-                        <div>
-                            <toggle-element  @click="${this.togglePostProduction}"></toggle-element>
-                            <label>Post Production</label>
-                        </div>
+              
                         
                         <label class="file-input-wrapper">
                             <input type="file" id="file-input" @change="${this.handleFileChange}">

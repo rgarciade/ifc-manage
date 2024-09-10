@@ -25,12 +25,11 @@ export class GenerateWorld {
     this.container = document.getElementById("container")!;
     this.components = new OBC.Components();
     this.worlds = this.components.get(OBC.Worlds);
-    debugger
+
     this.typeOfWorld = typeOfWorld;
     this.createWorld();
     this.world.onAfterUpdate .add(() => {
       if( this.lastModelSetDate > this.lastUpdate) {
-        debugger
         dispatchEvent('addModelToWorld');
         this.lastUpdate = new Date();
       }
@@ -81,14 +80,12 @@ export class GenerateWorld {
   }
 
   togglePostProduction() {
-    debugger
     this.world.renderer.postproduction.enabled = !this.world.renderer.postproduction.enabled;
     this.world.reset();
   }
 
 
   private createWorld() {
-    debugger
     switch (this.typeOfWorld) {
         case TypeOfWorld.Simple:
             this.createSimpleWorld();

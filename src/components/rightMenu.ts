@@ -1,6 +1,5 @@
 import { LitElement, html,css } from 'lit';
 import * as THREE from "three";
-import {buttons} from "@thatopen/ui-obc";
 import {TypeOfWorld} from "../controllers/world/generateWorld";
 
 export class RightMenuElement extends LitElement {
@@ -18,28 +17,21 @@ export class RightMenuElement extends LitElement {
     static get properties() {
         return {
             sections: { type: Array },
-            loadIfc: { type: Object },
             world: { type: Object },
             highlighter: { type: Object },
             ifLoader: { type: Object },
         };
     }
-    loadIfc: ((id: string) => void);
     world: any;
     ifLoader: any;
     highlighter: any;
     constructor() {
         super();
-        this.loadIfc = (id: string) => {};
         window.addEventListener('addModelToWorld', () => {
-            //debugger
             this.requestUpdate();
         });
     }
 
-    load(file: string) {
-        this.loadIfc(file);
-    }
     callFitModel() {
         this.world.fitLastModel();
     }
@@ -81,16 +73,13 @@ export class RightMenuElement extends LitElement {
         const whiteColor = new THREE.Color("white");
         const culler = this.world.complexModels[0].culler;
         const plans = this.world.complexModels[0].plans;
-        debugger
-        const buttons = []
-        debugger
+
         if(plans.list.length === 0){
             return html`<bim-button label="No hay planes"></bim-button>`;
         }
         const minGloss = this.world.world.renderer!.postproduction.customEffects.minGloss;
 
         const defaultBackground = this.world.world.scene.three.background;
-        console.log('plans',plans)
         return html`
             <bim-panel-section collapsed label="planos">
                 ${plans.list.map((plan: { name: unknown; classifier: { setColor: (arg0: any, arg1: THREE.Color) => void; }; modelItems: any; id: any; }) => html`
@@ -102,7 +91,7 @@ export class RightMenuElement extends LitElement {
                                     this.world.world.scene.three.background = whiteColor;
                                     plans.goTo(plan.id);
                                     culler.needsUpdate = true;
-        }}"></bim-button>`)}
+                    }}"></bim-button>`)}
                 <bim-button checked label="Exit"
                             @click="${() => {
                                 this.highlighter.backupColor = null;

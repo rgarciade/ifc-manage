@@ -12,18 +12,12 @@ BUI.Manager.init();
     const worldContent = new World(TypeOfWorld.PostProduction);
     const ifLoader = new InitIfLoader(worldContent);
     await ifLoader.setup()
-    const highlighter: Highlighter = new Highlighter(worldContent);
+    const highlighter = new Highlighter(worldContent);
 
-    const loadIfc = async (file: string) => {
-        await ifLoader.loadIfc(
-            `http://127.0.0.1:5500/models/${file}.ifc`
-        );
-    };
     const interfaceHtml = html`
     <elements-relation-element .world="${worldContent}"  .highlighter="${highlighter}"></elements-relation-element>
     <bottom-menu-element .world="${worldContent}" .ifcLoader="${ifLoader}"></bottom-menu-element>
     <right-menu-element 
-        .loadIfc="${loadIfc}"
         .ifLoader="${ifLoader}"
         .world="${worldContent}"
         .highlighter="${highlighter}"
