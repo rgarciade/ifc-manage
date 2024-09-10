@@ -1,6 +1,6 @@
 import { LitElement, html,css } from 'lit';
 
-export class ButtonMenuElement extends LitElement {
+export class ButtonElement extends LitElement {
     static get styles() {
         return css` 
             .icon-button {
@@ -55,4 +55,4 @@ export class ButtonMenuElement extends LitElement {
     }
 }
 
-window.customElements.define('button-menu-element', ButtonMenuElement);
+window.customElements.define('button-element', ButtonElement);

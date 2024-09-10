@@ -1,4 +1,6 @@
 import { LitElement, html,css } from 'lit';
+import * as THREE from "three";
+import {TypeOfWorld} from "../controllers/world/generateWorld";
 
 export class RightMenuElement extends LitElement {
     static get styles() {
@@ -12,28 +14,24 @@ export class RightMenuElement extends LitElement {
             }
         `;
     }
-
     static get properties() {
         return {
             sections: { type: Array },
-            loadIfc: { type: Object },
             world: { type: Object },
             highlighter: { type: Object },
             ifLoader: { type: Object },
         };
     }
-    loadIfc: ((id: string) => void);
     world: any;
     ifLoader: any;
     highlighter: any;
     constructor() {
         super();
-        this.loadIfc = (id: string) => {};
+        window.addEventListener('addModelToWorld', () => {
+            this.requestUpdate();
+        });
     }
 
-    load(file: string) {
-        this.loadIfc(file);
-    }
     callFitModel() {
         this.world.fitLastModel();
     }
@@ -50,7 +48,7 @@ export class RightMenuElement extends LitElement {
         this.ifLoader.exportFragments();
     }
     callRemoveAllModels() {
-       // this.world.removeAllModels();
+        // this.world.removeAllModels();
         alert('pequeños bugs,hay que revisarlo, recarga la pagina para eliminar los modelos')
     }
 
@@ -68,9 +66,51 @@ export class RightMenuElement extends LitElement {
     //     </bim-panel-section>
     // </bim-panel-section>
 
+    loadPlans() {
+        if(this.world.typeOfWorld !== TypeOfWorld.PostProduction){
+            return ''
+        }
+        const whiteColor = new THREE.Color("white");
+        const culler = this.world.complexModels[0].culler;
+        const plans = this.world.complexModels[0].plans;
+
+        if(plans.list.length === 0){
+            return html`<bim-button label="No hay planes"></bim-button>`;
+        }
+        const minGloss = this.world.world.renderer!.postproduction.customEffects.minGloss;
+
+        const defaultBackground = this.world.world.scene.three.background;
+        return html`
+            <bim-panel-section collapsed label="planos">
+                ${plans.list.map((plan: { name: unknown; classifier: { setColor: (arg0: any, arg1: THREE.Color) => void; }; modelItems: any; id: any; }) => html`
+                    <bim-button checked label="${plan.name}"
+                                @click="${() => {
+                                    this.world.world.renderer!.postproduction.customEffects.minGloss = 0.1;
+                                    this.highlighter.backupColor = whiteColor;
+                                    //classifier.setColor(modelItems, whiteColor);
+                                    this.world.world.scene.three.background = whiteColor;
+                                    plans.goTo(plan.id);
+                                    culler.needsUpdate = true;
+                    }}"></bim-button>`)}
+                <bim-button checked label="Exit"
+                            @click="${() => {
+                                this.highlighter.backupColor = null;
+                                this.highlighter.highlighter.clear();
+                                this.world.world.renderer!.postproduction.customEffects.minGloss = minGloss;
+                                //classifier.resetColor(modelItems);
+                                this.world.world.scene.three.background = defaultBackground;
+                                plans.exitPlanView();
+                                culler.needsUpdate = true;
+                            }}">
+                </bim-button>
+            </bim-panel-section>
+    `;
+    }
+
     render() {
-            return html`<div>
+        return html`<div>
                 <bim-panel active label="Options" class="options-menu">
+                    <bim-panel-section  label="Controls">
                             <bim-panel-section style="padding-top: 12px;">
                                 <bim-button label="Fit last mode" @click="${ () => {this.callFitModel()}}"></bim-button>
                                 <bim-button label="toggle highlighter" @click="${ () => {this.callToggleHighlighter()}}"></bim-button>
@@ -78,7 +118,11 @@ export class RightMenuElement extends LitElement {
                                 <bim-button label="Export fragments" @click="${ () => {this.callExportFragments()}}"></bim-button>
                                 <bim-button label="remove all models" @click="${ () => {this.callRemoveAllModels()}}"></bim-button>
                             </bim-panel-section>
+                    </bim-panel-section>
+                    ${(this.world.complexModels.length)?this.loadPlans():''}
                 </bim-panel>
+
+               
             </div>`;
     }
 }

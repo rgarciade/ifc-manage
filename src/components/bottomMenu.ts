@@ -41,12 +41,7 @@ export class BottomMenuElement extends LitElement {
         const input = event.target as HTMLInputElement;
         if (input.files && input.files.length > 0) {
             const file = input.files[0];
-            this.ifcLoader.loadIfcFromFile(file).then((model: any) => {
-                if(model){
-                    this.world.addModel(model).then(() => {});
-                }
-            } )
-
+            this.ifcLoader.loadIfcFromFile(file)
         }
     }
     triggerFileInput() {
@@ -56,16 +51,27 @@ export class BottomMenuElement extends LitElement {
         }
     }
 
-    callActiveCuller() {
+    callToggleCuller() {
+        console.log('1-top-toggle culler')
         this.world.toggleCuller();
+        console.log('2-top-after toggle culler')
     }
 
+    isCullerEnable() {
+        return this.world.enableCuller
+    }
+    // <button-element icon="clarity:power-solid-alerted" text="Activate Optimizer" @click="${this.callToggleCuller}"></button-element>
+    // <div>
+    //     <toggle-element @toggle-changed="${this.callToggleCuller}" .active="${this.isCullerEnable}"></toggle-element>
+    //     <label>Post Production</label>
+    // </div>
     render() {
             return html`
                 <div>
                     <div class="bottom-menu">
-                        <button-menu-element icon="hugeicons:file-upload" text="Load IFC" @click="${this.triggerFileInput}"></button-menu-element>
-                        <button-menu-element icon="clarity:power-solid-alerted" text="Activate Optimizer" @click="${this.callActiveCuller}"></button-menu-element>
+                        <button-element icon="hugeicons:file-upload" text="Load IFC" @click="${this.triggerFileInput}"></button-element>
+              
+                        
                         <label class="file-input-wrapper">
                             <input type="file" id="file-input" @change="${this.handleFileChange}">
                         </label>

@@ -1,40 +1,53 @@
-import { GenerateWorld } from "./generateWorld";
+import {GenerateWorld, TypeOfWorld} from "./generateWorld";
 import {FragmentsGroup} from "@thatopen/fragments";
 import * as OBC from "@thatopen/components";
 import * as OBCF from "@thatopen/components-front";
 import * as THREE from "three";
+import {Plans} from "./plans";
+import { dispatchEvent}  from "../../utils/dispatchEvent";
+import {Classifier} from "./classifier";
 
-interface complexModel {
+export interface complexModel {
     model: FragmentsGroup;
     culler?: OBC.MeshCullerRenderer;
+    plans?: OBCF.Plans;
+    Classifier?: Classifier;
 }
 
 export class World extends GenerateWorld {
     enableManyModels: boolean = true;
-    enableCuller: boolean = false;
+    enableCuller: boolean = true;
     cullers: OBC.Cullers [] = [];
 
     complexModels: complexModel[] = [];
 
-    constructor() {
-        super();
+    constructor(typeOfWorld: TypeOfWorld) {
+        super(typeOfWorld);
     }
     toggleEnableManyModels() {
         this.enableManyModels = !this.enableManyModels;
     }
     async addModel(model: FragmentsGroup) {
-        debugger
         if (!this.enableManyModels) {
             this.removeAllModels();
         }
         super.addModel(model);
         this.defineLastModel(model);
 
-        const culler= this.createCuller(model);
-        const complexModel = culler? {model, culler} : {model};
-        this.complexModels.push(complexModel);
+        await this.fillComplexModel(model);
+    }
+    async fillComplexModel(model: FragmentsGroup) {
         const indexer = this.world.components.get(OBC.IfcRelationsIndexer);
         await indexer.process(model)
+        const culler= this.createCuller(model);
+        const complexModel:complexModel = culler? {model, culler} : {model};
+
+        if(this.typeOfWorld === TypeOfWorld.PostProduction){
+            const plansModel = new Plans(this, model);
+            await plansModel.generate();
+            complexModel.plans = plansModel.plans;
+        }
+        this.complexModels.push(complexModel);
     }
     removeAllModels() {
         this.complexModels.forEach((complexModel) => {
@@ -67,6 +80,7 @@ export class World extends GenerateWorld {
             });
             this.listenerCuller();
         }
+        console.log('???enabled culler??????', this.enableCuller)
         return true
     }
     private haveCuller() {
@@ -88,7 +102,7 @@ export class World extends GenerateWorld {
     }
 
     private listenerCuller() {
-         this.world.camera.controls.addEventListener("sleep", () => {
+        this.world.camera.controls.addEventListener("sleep", () => {
             this.complexModels.forEach((complexModel) => {
                 if(!complexModel.culler) return
                 complexModel.culler.needsUpdate = true

@@ -4,31 +4,26 @@ import { InitIfLoader } from "./controllers/ifLoader";
 import { html,render } from 'lit';
 import "./components";
 import {Highlighter} from "./controllers/world/highlighter";
+import {TypeOfWorld} from "./controllers/world/generateWorld";
 
 BUI.Manager.init();
-const definedWorld = new World();
-const ifLoader = new InitIfLoader(definedWorld);
-const highlighter: Highlighter = new Highlighter(definedWorld);
 
-const loadIfc = async (file: string) => {
-    await ifLoader.loadIfc(
-        `http://127.0.0.1:5500/models/${file}.ifc`
-    );
-};
+(async () => {
+    const worldContent = new World(TypeOfWorld.PostProduction);
+    const ifLoader = new InitIfLoader(worldContent);
+    await ifLoader.setup()
+    const highlighter = new Highlighter(worldContent);
 
-
-const interfaceHtml = html`
-    <elements-relation-element .world="${definedWorld}"  .highlighter="${highlighter}"></elements-relation-element>
-    <bottom-menu-element .world="${definedWorld}" .ifcLoader="${ifLoader}"></bottom-menu-element>
+    const interfaceHtml = html`
+    <elements-relation-element .world="${worldContent}"  .highlighter="${highlighter}"></elements-relation-element>
+    <bottom-menu-element .world="${worldContent}" .ifcLoader="${ifLoader}"></bottom-menu-element>
     <right-menu-element 
-        .loadIfc="${loadIfc}"
         .ifLoader="${ifLoader}"
-        .world="${definedWorld}"
+        .world="${worldContent}"
         .highlighter="${highlighter}"
     ></right-menu-element>
     <loader-element></loader-element>
 `;
 
-
-render(interfaceHtml, document.body);
-
+    render(interfaceHtml, document.body);
+})();
