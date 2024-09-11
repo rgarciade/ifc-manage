@@ -1,27 +1,22 @@
 {
-  "name": "ifcjs-101",
-  "version": "1.0.0",
-  "description": "hello world example of ifc.js",
+  "name": "ifcjs",
+  "version": "0.0.1",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "build": "tsc && rollup -c ./rollup.config.js",
     "watch": "tsc &&rollup -w -c ./rollup.config.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AnweshGangula/ifcjs-101.git"
   },
   "keywords": [
     "ifcjs",
     "BIM",
     "AEC"
   ],
-  "author": "Anwesh Gangula",
-  "license": "ISC",
+  "author": "Rgarciade",
   "bugs": {
-    "url": "https://github.com/AnweshGangula/ifcjs-101/issues"
+    "url": ""
   },
-  "homepage": "https://github.com/AnweshGangula/ifcjs-101#readme",
+  "homepage": "",
   "dependencies": {
     "@thatopen/components": "~2.1.27",
     "@thatopen/fragments": "~2.1.0",
