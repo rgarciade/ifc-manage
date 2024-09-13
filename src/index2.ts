@@ -1,31 +1,8 @@
-/* MD
-### 📐 Navigating floorplans
----
-
-Floorplans are one of the most common ways of navigating BIM models, as they have been the most commonly used document before the digital era. In this tutorial, you'll learn how to do it with our libraries.
-
-:::tip Floorplans?
-
-Even though the BIM model defines the building perfectly, architects and engineers are still used to the clipped 2D representation that we have used for decades.
-
-:::
-
-In this tutorial, we will import:
-
-- `three` to create some 3D items.
-- `@thatopen/components` to set up the barebone of our app.
-- `@thatopen/ui` to add some simple and cool UI menus.
-- `@thatopen/components-front` to use some frontend-oriented components.
-- `Stats.js` (optional) to measure the performance of our app.
-*/
 
 import * as THREE from "three";
 import * as OBC from "@thatopen/components";
 import * as OBCF from "@thatopen/components-front";
 import * as BUI from "@thatopen/ui";
-import {World} from "./controllers/world/world";
-import {TypeOfWorld} from "./controllers/world/generateWorld";
-import {InitIfLoader} from "./controllers/ifLoader";
 
 /* MD
   ### 🌎 Setting up a simple scene
@@ -33,48 +10,57 @@ import {InitIfLoader} from "./controllers/ifLoader";
 
   We will start by creating a simple scene with a camera and a renderer. If you don't know how to set up a scene, you can check the Worlds tutorial. Notice how we use the PostproductionRenderer in this case.
 */
-async function ss () {
-    // const container = document.getElementById("container")!;
-    //
-    // const components = new OBC.Components();
-    //
-    // const worlds = components.get(OBC.Worlds);
-    //
-    // const world = worlds.create<
-    //     OBC.SimpleScene,
-    //     OBC.OrthoPerspectiveCamera,
-    //     OBCF.PostproductionRenderer
-    // >();
-    //
-    // world.scene = new OBC.SimpleScene(components);
-    // world.renderer = new OBCF.PostproductionRenderer(components, container);
-    // world.camera = new OBC.OrthoPerspectiveCamera(components);
-    //
-    // world.renderer.postproduction.enabled = true;
-    // world.renderer.postproduction.customEffects.outlineEnabled = true;
-    //
-    // components.init();
-    //
-    // await world.camera.controls.setLookAt(12, 6, 8, 0, 0, -10);
-    //
-    // world.scene.setup();
-    //
-    // const grids = components.get(OBC.Grids);
-    // grids.config.color.setHex(0x666666);
-    // const grid = grids.create(world);
-    // grid.three.position.y -= 1;
-    // world.renderer.postproduction.customEffects.excludedMeshes.push(grid.three);
 
-    const definedWorld = new World(TypeOfWorld.PostProduction);
-    const world = definedWorld.world;
-    const components = definedWorld.components;
+
+
+
+async function ss () {
+
+    /* MD
+      ### 🌎 Setting up a simple scene
+      ---
+
+      We will start by creating a simple scene with a camera and a renderer. If you don't know how to set up a scene, you can check the Worlds tutorial. Notice how we use the PostproductionRenderer in this case.
+    */
+
+    const container = document.getElementById("container")!;
+
+    const components = new OBC.Components();
+
+    const worlds = components.get(OBC.Worlds);
+
+    const world = worlds.create<
+        OBC.SimpleScene,
+        OBC.OrthoPerspectiveCamera,
+        OBCF.PostproductionRenderer
+    >();
+
+    world.scene = new OBC.SimpleScene(components);
+    world.renderer = new OBCF.PostproductionRenderer(components, container);
+    world.camera = new OBC.OrthoPerspectiveCamera(components);
+
+    world.renderer.postproduction.enabled = true;
+    world.renderer.postproduction.customEffects.outlineEnabled = true;
+
+    components.init();
+    debugger
+    await world.camera.controls.setLookAt(12, 6, 8, 0, 0, -10);
+
+    world.scene.setup();
+
+    const grids = components.get(OBC.Grids);
+    grids.config.color.setHex(0x666666);
+    const grid = grids.create(world);
+    grid.three.position.y -= 1;
+    world.renderer.postproduction.customEffects.excludedMeshes.push(grid.three);
+
     /* MD
 
       We'll make the background of the scene transparent so that it looks good in our docs page, but you don't have to do that in your app!
 
     */
 
-   // world.scene.three.background = null;
+    world.scene.three.background = null;
 
     /* MD
       ### 🧳 Loading a BIM model
@@ -88,47 +74,49 @@ async function ss () {
 
       :::
     */
-
-    console.log('f0')
-    const ifLoader = new InitIfLoader(definedWorld);
-    await ifLoader.setup()
-    console.log('f0.1.1')
-    const fragments = ifLoader.fragments;
-    console.log('f0.1.2')
     debugger
-    const model = await ifLoader.loadIfc(`http://127.0.0.1:5500/models/01.ifc`);
-    // const file = await fetch(`http://127.0.0.1:5500/models/01.ifc`);
+    const fragments = components.get(OBC.FragmentsManager);
+
+    // const file = await fetch(
+    //     "https://thatopen.github.io/engine_components/resources/small.frag",
+    // );
     // const data = await file.arrayBuffer();
     // const buffer = new Uint8Array(data);
-    // const model = await ifLoader.fragmentIfcLoader.load(buffer);
-
-    console.log('f0.1.3')
-    //world.scene.three.add(model);
-
-
-    // const fragments = components.get(OBC.FragmentsManager);
-    // const fragmentIfcLoader = world.components.get(OBC.IfcLoader);
-    // await fragmentIfcLoader.setup();
-    // const file = await fetch(`http://127.0.0.1:5500/models/01.ifc`);
-    // const data = await file.arrayBuffer();
-    // const buffer = new Uint8Array(data);
-    // const model = await fragmentIfcLoader.load(buffer);
-    // console.log('f1',model)
+    // const model = fragments.load(buffer);
     // world.scene.three.add(model);
-    // debugger
-    // const indexer = components.get(OBC.IfcRelationsIndexer);
-    // await indexer.process(model);
-    // const json = indexer.serializeModelRelations(model);
-    // console.log(json);
+    //
+    // const propsFile = await fetch(
+    //     "https://thatopen.github.io/engine_components/resources/small.json",
+    // );
+    // const propsData = await propsFile.json();
+    // model.setLocalProperties(propsData);
 
 
-    /* MD
-      ### ⏱️ Measuring the performance (optional)
-      ---
+    const file = await fetch(
+        `http://127.0.0.1:5500/models/big.frag`,
+    );
+    const data = await file.arrayBuffer();
+    const buffer = new Uint8Array(data);
+    const model = fragments.load(buffer);
+    debugger
+    world.scene.three.add(model);
+    debugger
+    const propsFile = await fetch(
+        `http://127.0.0.1:5500/models/big.json`,
+    );
 
-      We'll use the [Stats.js](https://github.com/mrdoob/stats.js) to measure the performance of our app. We will add it to the top left corner of the viewport. This way, we'll make sure that the memory consumption and the FPS of our app are under control.
-    */
+    try {
+        console.log('a1')
+        const propsData = await propsFile.json();
+        console.log('a2')
+        model.setLocalProperties(propsData);
+        console.log('a3')
+    }catch (e){
+        console.error('Error al cargar las propiedades', e)
+    }
 
+
+    debugger
     /* MD
       ### 🖼️ Getting the plans
       ---
@@ -137,12 +125,10 @@ async function ss () {
     */
 
     const plans = components.get(OBCF.Plans);
-    console.log('f5')
     plans.world = world;
-    console.log('f6')
     await plans.generate(model);
-    console.log('f7')
-   console.log(plans.list)
+
+    debugger
     /* MD
       ### 🔦 Setting up highlighting
       ---
@@ -157,7 +143,7 @@ async function ss () {
     */
 
     const highlighter = components.get(OBCF.Highlighter);
-    highlighter.setup({world});
+    highlighter.setup({ world });
 
     /* MD
       ### 🐈‍⬛ Setting up culling
@@ -183,7 +169,7 @@ async function ss () {
     world.camera.controls.addEventListener("sleep", () => {
         culler.needsUpdate = true;
     });
-
+    debugger
     /* MD
       ### 🖌️ Defining styles
       ---
@@ -211,8 +197,8 @@ async function ss () {
 
     classifier.byModel(model.uuid, model);
     classifier.byEntity(model);
-
-    const modelItems = classifier.find({models: [model.uuid]});
+    debugger
+    const modelItems = classifier.find({ models: [model.uuid] });
 
     const thickItems = classifier.find({
         entities: ["IFCWALLSTANDARDCASE", "IFCWALL"],
@@ -221,13 +207,13 @@ async function ss () {
     const thinItems = classifier.find({
         entities: ["IFCDOOR", "IFCWINDOW", "IFCPLATE", "IFCMEMBER"],
     });
-
+    debugger
     /* MD
       Awesome! Now, to create a style called "thick" for the walls, we can do the following:
     */
 
-    const grayFill = new THREE.MeshBasicMaterial({color: "gray", side: 2});
-    const blackLine = new THREE.LineBasicMaterial({color: "black"});
+    const grayFill = new THREE.MeshBasicMaterial({ color: "gray", side: 2 });
+    const blackLine = new THREE.LineBasicMaterial({ color: "black" });
     const blackOutline = new THREE.MeshBasicMaterial({
         color: "black",
         opacity: 0.5,
@@ -247,7 +233,7 @@ async function ss () {
     for (const fragID in thickItems) {
         const foundFrag = fragments.list.get(fragID);
         if (!foundFrag) continue;
-        const {mesh} = foundFrag;
+        const { mesh } = foundFrag;
         edges.styles.list.thick.fragments[fragID] = new Set(thickItems[fragID]);
         edges.styles.list.thick.meshes.add(mesh);
     }
@@ -261,7 +247,7 @@ async function ss () {
     for (const fragID in thinItems) {
         const foundFrag = fragments.list.get(fragID);
         if (!foundFrag) continue;
-        const {mesh} = foundFrag;
+        const { mesh } = foundFrag;
         edges.styles.list.thin.fragments[fragID] = new Set(thinItems[fragID]);
         edges.styles.list.thin.meshes.add(mesh);
     }
@@ -357,4 +343,4 @@ async function ss () {
       That's it! You have created an app that can generate all the floorplans of a BIM model and navigate across them in 2D mode with a nice black and white look. Congratulations!
     */
 }
-//ss().then(r => console.log(r))
+ss().then(r => console.log(r))

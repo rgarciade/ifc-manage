@@ -39,13 +39,17 @@ export class BottomMenuElement extends LitElement {
     }
     handleFileChange(event: Event) {
         const input = event.target as HTMLInputElement;
+        const files = [];
         if (input.files && input.files.length > 0) {
-            const file = input.files[0];
-            this.ifcLoader.loadIfcFromFile(file)
+            for (const file of Array.from(input.files)) {
+                files.push(file);
+            }
+            this.ifcLoader.loadIfcFromFile(files);
         }
     }
     triggerFileInput() {
         const fileInput = this.shadowRoot?.querySelector('#file-input');
+
         if (fileInput && fileInput instanceof HTMLInputElement) {
             fileInput.click();
         }
@@ -73,7 +77,7 @@ export class BottomMenuElement extends LitElement {
               
                         
                         <label class="file-input-wrapper">
-                            <input type="file" id="file-input" @change="${this.handleFileChange}">
+                            <input type="file" id="file-input" @change="${this.handleFileChange}" multiple>
                         </label>
                     </div>
                `;

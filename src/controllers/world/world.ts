@@ -1,5 +1,5 @@
 import {GenerateWorld, TypeOfWorld} from "./generateWorld";
-import {FragmentsGroup} from "@thatopen/fragments";
+import {FragmentsGroup, IfcProperties} from "@thatopen/fragments";
 import * as OBC from "@thatopen/components";
 import * as OBCF from "@thatopen/components-front";
 import * as THREE from "three";
@@ -27,25 +27,32 @@ export class World extends GenerateWorld {
     toggleEnableManyModels() {
         this.enableManyModels = !this.enableManyModels;
     }
-    async addModel(model: FragmentsGroup) {
+    async addModel(model: FragmentsGroup, properties?: IfcProperties) {
         if (!this.enableManyModels) {
             this.removeAllModels();
         }
         super.addModel(model);
         this.defineLastModel(model);
-
-        await this.fillComplexModel(model);
+        if(properties){
+            model.setLocalProperties(properties);
+        }
+        await this.fillComplexModel(model,properties);
     }
-    async fillComplexModel(model: FragmentsGroup) {
+    async fillComplexModel(model: FragmentsGroup,properties?: IfcProperties) {
         const indexer = this.world.components.get(OBC.IfcRelationsIndexer);
-        await indexer.process(model)
+         await indexer.process(model)
         const culler= this.createCuller(model);
         const complexModel:complexModel = culler? {model, culler} : {model};
 
         if(this.typeOfWorld === TypeOfWorld.PostProduction){
-            const plansModel = new Plans(this, model);
-            await plansModel.generate();
-            complexModel.plans = plansModel.plans;
+            try {
+                const plansModel = new Plans(this, model);
+                await plansModel.generate();
+                complexModel.plans = plansModel.plans;
+            }catch (e){
+                console.error('Error al generar los planos', e)
+            }
+
         }
         this.complexModels.push(complexModel);
     }

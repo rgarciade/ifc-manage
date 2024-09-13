@@ -25,6 +25,7 @@
     "@types/three": "0.160.0",
     "camera-controls": "2.7.3",
     "stats.js": "^0.17.0",
+    "streamsaver": "^2.0.6",
     "three": "^0.160.1",
     "three-mesh-bvh": "0.7.0",
     "undici-types": "^6.19.6",
