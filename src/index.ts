@@ -18,11 +18,13 @@ BUI.Manager.init();
     <elements-relation-element .world="${worldContent}"  .highlighter="${highlighter}"></elements-relation-element>
     <bottom-menu-element .world="${worldContent}" .ifcLoader="${ifLoader}"></bottom-menu-element>
     <right-menu-element 
+            .small="${true}"
         .ifLoader="${ifLoader}"
         .world="${worldContent}"
         .highlighter="${highlighter}"
     ></right-menu-element>
     <loader-element></loader-element>`;
-
-    render(interfaceHtml, document.body);
+    const container = document.querySelector('#fmenus');
+    // @ts-ignore
+    render(interfaceHtml, container);
 })();

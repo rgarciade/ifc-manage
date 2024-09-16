@@ -5,12 +5,32 @@ import {TypeOfWorld} from "../controllers/world/generateWorld";
 export class RightMenuElement extends LitElement {
     static get styles() {
         return css`
+            :host {
+                  //button size
+                --bim-ui_size-sm: 30px;
+                --bim-ui_size-sm: 30px;
+            }
             .options-menu {
-                position: fixed;
+                position: absolute;
                 min-width: unset;
                 top: 5px;
                 right: 5px;
                 max-height: calc(100vh - 10px);
+            }
+            .small-menu{
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            button-element {
+                button{
+                    width:  200px;
+                    min-width: 200px;
+                    max-width: 200px;
+                }
+                .tooltip-container{
+                    width: 20px;
+                }
             }
         `;
     }
@@ -20,11 +40,13 @@ export class RightMenuElement extends LitElement {
             world: { type: Object },
             highlighter: { type: Object },
             ifLoader: { type: Object },
+            small: { type: Boolean },
         };
     }
     world: any;
     ifLoader: any;
     highlighter: any;
+    small: boolean = false;
     constructor() {
         super();
         window.addEventListener('addModelToWorld', () => {
@@ -80,6 +102,7 @@ export class RightMenuElement extends LitElement {
         const minGloss = this.world.world.renderer!.postproduction.customEffects.minGloss;
 
         const defaultBackground = this.world.world.scene.three.background;
+
         return html`
             <bim-panel-section collapsed label="planos">
                 ${plans.list.map((plan: { name: unknown; classifier: { setColor: (arg0: any, arg1: THREE.Color) => void; }; modelItems: any; id: any; }) => html`
@@ -108,7 +131,18 @@ export class RightMenuElement extends LitElement {
     }
 
     render() {
-        return html`<div>
+        if(this.small){
+            return html`
+            <div class="options-menu small-menu">
+                <button-element text="Fit last model" small="${true}" icon="fluent:zoom-fit-16-filled" @click="${ () => {this.callFitModel()}}"></button-element>
+                <button-element text="toggle highlighter" small="${true}" icon="ph:selection-foreground-duotone" @click="${ () => {this.callToggleHighlighter()}}"></button-element>
+                <button-element text="Export fragments"  small="${true}" icon="ph:export-duotone" @click="${ () => {this.callExportFragments()}}"></button-element>
+                <button-element text="remove all models"  small="${true}" icon="material-symbols-light:remove-selection-rounded" @click="${ () => {this.callRemoveAllModels()}}"></button-element>
+            </div>
+            <bim-checkbox label="charge many models"  inverted checked @change="${ () => {this.callChargeManyModels()}}}"></bim-checkbox>
+        `;
+        }else{
+            return html`<div>
                 <bim-panel active label="Options" class="options-menu">
                     <bim-panel-section  label="Controls">
                             <bim-panel-section style="padding-top: 12px;">
@@ -121,9 +155,9 @@ export class RightMenuElement extends LitElement {
                     </bim-panel-section>
                     ${(this.world.complexModels.length)?this.loadPlans():''}
                 </bim-panel>
-
-               
             </div>`;
+        }
+
     }
 }
 

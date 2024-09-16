@@ -21,17 +21,18 @@
     <style>
       body {
         margin: 0;
-        padding: 0;
         font-family: "Plus Jakarta Sans", sans-serif;
         overflow: hidden;
+        width: 100vw;
+        height:100vh;
       }
 
-      .full-screen {
-        width: 100vw;
+      .full-screen, .fmenus {
         height: 100vh;
-        position: relative;
-        overflow: hidden;
+        width: 100vw;
+        position: absolute;
       }
+
       .options-menu {
         position: fixed;
         min-width: unset;
@@ -65,7 +66,8 @@
   </head>
 
   <body>
-    <div class="full-screen" id="container"></div>
+    <div class="full-screen" id="fcontainer"></div>
+    <div id="fmenus"></div>
     <script type="module" src="bundle.js"></script>
   </body>
 </html>
