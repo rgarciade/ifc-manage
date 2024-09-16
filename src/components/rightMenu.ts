@@ -32,6 +32,9 @@ export class RightMenuElement extends LitElement {
                     width: 20px;
                 }
             }
+            checkbox-element {
+                padding-left: 3px;
+            }
         `;
     }
     static get properties() {
@@ -70,7 +73,7 @@ export class RightMenuElement extends LitElement {
         this.ifLoader.exportFragments();
     }
     callRemoveAllModels() {
-        // this.world.removeAllModels();
+         this.world.removeAllModels();
         alert('pequeños bugs,hay que revisarlo, recarga la pagina para eliminar los modelos')
     }
 
@@ -138,8 +141,8 @@ export class RightMenuElement extends LitElement {
                 <button-element text="toggle highlighter" small="${true}" icon="ph:selection-foreground-duotone" @click="${ () => {this.callToggleHighlighter()}}"></button-element>
                 <button-element text="Export fragments"  small="${true}" icon="ph:export-duotone" @click="${ () => {this.callExportFragments()}}"></button-element>
                 <button-element text="remove all models"  small="${true}" icon="material-symbols-light:remove-selection-rounded" @click="${ () => {this.callRemoveAllModels()}}"></button-element>
+                <checkbox-element label="charge many models" small="${true}" checked @clickAction="${ () => {this.callChargeManyModels()}}}"></checkbox-element>
             </div>
-            <bim-checkbox label="charge many models"  inverted checked @change="${ () => {this.callChargeManyModels()}}}"></bim-checkbox>
         `;
         }else{
             return html`<div>

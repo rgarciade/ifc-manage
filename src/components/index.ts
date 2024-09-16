@@ -4,3 +4,4 @@ export * from "./bottomMenu";
 export * from "./loader";
 export * from "./button";
 export * from "./toggle";
+export * from "./checkbox";

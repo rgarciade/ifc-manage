@@ -1,46 +1,9 @@
 import { LitElement, html,css } from 'lit';
+import {Checkbox} from "@thatopen/ui";
 
-export class ButtonElement extends LitElement {
+export class CheckboxElement extends LitElement {
     static get styles() {
         return css`
-  
-            .icon-button {
-                background-color: #007bff;
-                border: none;
-                border-radius: 7px;
-                color: white;
-                cursor: pointer;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                padding: 11px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                margin: 4px 2px;
-                
-            }
-
-            .icon-button bim-icon {
-                color: white;
-                position: relative;
-                bottom: -2px;
-            }
-            .small-button {
-                border: none;
-                border-radius: 7px;
-                color: white;
-                cursor: pointer;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                padding: 11px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                margin: 4px 2px;
-
-            }
             .tooltip-container {
                 position: relative;
                 display: inline-block;
@@ -97,29 +60,27 @@ export class ButtonElement extends LitElement {
     static get properties() {
         return {
             clickAction: { type: Function },
-            icon: { type: String },
-            text: { type: String },
+            label: { type: String },
             small: { type: Boolean },
-            color: { type: String },
-            tooltipPosition: { type: String }
+            tooltipPosition: { type: String },
+            checked: { type: Boolean }
         };
     }
     clickAction: any;
-    icon: string;
-    text: string;
-    small: boolean =false
-    color: string = 'white'
-    tooltipPosition: string = ''
-    callClickAction() {
-        this.clickAction();
-    }
+    checked: boolean = false;
+    label: string;
+    small: boolean;
+    tooltipPosition: string = '';
+
     constructor() {
         super();
-        this.icon = 'file';
-        this.text = 'Load Sample';
-        this.clickAction = () => {};
+        this.label = '';
+        this.small = false;
     }
 
+    callAction() {
+        this.clickAction();
+    }
     getTooltipPosition() {
         switch (this.tooltipPosition) {
             case 'top':
@@ -136,18 +97,15 @@ export class ButtonElement extends LitElement {
     render() {
         return this.small ?
             html`
-                <div class="tooltip-container" @click="${() => this.callClickAction()}">
-                    <span class="tooltip-text ${this.getTooltipPosition()}">${this.text}</span>
-                    <bim-icon icon="${this.icon}" style="color:${this.color}"></bim-icon>
+                <div class="tooltip-container">
+                    <span class="tooltip-text ${this.getTooltipPosition()}">${this.label}</span>
+                    <bim-checkbox inverted  ?checked="${this.checked}" @change="${ () => {this.callAction()}}}"></bim-checkbox>
                 </div>
             `:
             html`
-               <button class="icon-button" @click="${() => this.callClickAction()}">
-                   <bim-icon icon="${this.icon}"></bim-icon>
-                   ${this.text}
-               </button>
+                <bim-checkbox label="${this.label}" inverted checked @change="${ () => {this.callAction()}}}"></bim-checkbox>
         `;
     }
 }
 
-window.customElements.define('button-element', ButtonElement);
+window.customElements.define('checkbox-element', CheckboxElement);
