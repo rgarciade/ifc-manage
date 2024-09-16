@@ -22,7 +22,7 @@ export class GenerateWorld {
   private lastModelSetDate: Date = new Date();
 
   constructor(typeOfWorld: TypeOfWorld) {
-    this.container = document.getElementById("container")!;
+    this.container = document.getElementById("fcontainer")!;
     this.components = new OBC.Components();
     this.worlds = this.components.get(OBC.Worlds);
 

@@ -9,7 +9,7 @@ export class BottomMenuElement extends LitElement {
             }
 
             .bottom-menu {
-                position: fixed;
+                position: absolute;
                 display: flex;
                 justify-content: center;
                 bottom: 15px;
@@ -70,8 +70,6 @@ export class BottomMenuElement extends LitElement {
                 <div>
                     <div class="bottom-menu">
                         <button-element icon="hugeicons:file-upload" text="Load IFC" @click="${this.triggerFileInput}"></button-element>
-              
-                        
                         <label class="file-input-wrapper">
                             <input type="file" id="file-input" @change="${this.handleFileChange}">
                         </label>
