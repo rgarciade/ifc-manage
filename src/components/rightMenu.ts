@@ -73,7 +73,7 @@ export class RightMenuElement extends LitElement {
         this.ifLoader.exportFragments();
     }
     callRemoveAllModels() {
-         this.world.removeAllModels();
+        // this.world.removeAllModels();
         alert('pequeños bugs,hay que revisarlo, recarga la pagina para eliminar los modelos')
     }
 
