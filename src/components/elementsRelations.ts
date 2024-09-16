@@ -22,8 +22,8 @@ export class ElementsRelationsElement extends LitElement {
             }
 
             .big-elements-relations {
-                max-width: 1000px;
-                min-width: 1000px;
+                max-width: 700px;
+                min-width: 700px;
             }
 
             .arrow-toggle-relations {
