@@ -43,9 +43,9 @@ export class World extends GenerateWorld {
         const complexModel:complexModel = culler? {model, culler} : {model};
 
         if(this.typeOfWorld === TypeOfWorld.PostProduction){
-            const plansModel = new Plans(this, model);
-            await plansModel.generate();
-            complexModel.plans = plansModel.plans;
+            // const plansModel = new Plans(this, model);
+            // await plansModel.generate();
+            // complexModel.plans = plansModel.plans;
         }
         this.complexModels.push(complexModel);
     }
@@ -80,7 +80,6 @@ export class World extends GenerateWorld {
             });
             this.listenerCuller();
         }
-        console.log('???enabled culler??????', this.enableCuller)
         return true
     }
     private haveCuller() {

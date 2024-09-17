@@ -8,7 +8,7 @@ export class ElementsRelationsElement extends LitElement {
     static get styles() {
         return css`
             :host {
-                --bim-ui_bg-base: #0b0d0e00;
+                --bim-ui_bg-base: #1010108f;
             }
             .elements-relations {
                 position: absolute;
